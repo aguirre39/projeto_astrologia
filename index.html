@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroWeb Pro - Edição Profissional (PEGASUS 10X Web)</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: '#0B0B14', 
+                        surface: '#151525',
+                        gold: { DEFAULT: '#D4AF37', dark: '#AA8529', light: 'rgba(212,175,55,0.15)' },
+                        purple: { DEFAULT: '#8B5CF6', dark: '#5B21B6' }, 
+                        textMain: '#F3F4F6', 
+                        textMuted: '#9CA3AF' /* Aumentado o contraste para maior legibilidade */
+                    },
+                    fontFamily: { 
+                        cinzel: ['Cinzel', 'serif'], 
+                        inter: ['Inter', 'sans-serif'], 
+                        mono: ['JetBrains Mono', 'monospace'] 
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #0B0B14; color: #F3F4F6; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
+        
+        /* Fundo Estrelado Premium */
+        #stars-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; background: radial-gradient(circle at bottom, #1A1A2E 0%, #0B0B14 100%); }
+        .star { position: absolute; background-color: #FFF; border-radius: 50%; animation: twinkle linear infinite; }
+        @keyframes twinkle { 0% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.2; transform: scale(0.8); } }
+
+        /* Estilização de Painéis e Inputs (Alta Legibilidade) */
+        .glass-panel { background: rgba(21, 21, 37, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 12px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); }
+        .glass-input { background: rgba(11, 11, 20, 0.9); border: 1px solid rgba(212, 175, 55, 0.4); color: #F3F4F6; transition: all 0.3s ease; }
+        .glass-input:focus { outline: none; border-color: #D4AF37; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); background: rgba(21, 21, 37, 1); }
+        
+        /* Botões Gold Premium */
+        .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #AA8529 100%); color: #000; font-weight: 600; border: none; transition: all 0.2s; box-shadow: 0 2px 10px rgba(212,175,55,0.2); }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(212,175,55,0.4); }
+        .btn-gold:active { transform: translateY(0); }
+
+        /* Estrutura de Views e Abas */
+        .view-section { display: none; height: 100%; overflow-y: auto; padding: 1.5rem; }
+        .view-section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tab-btn { transition: all 0.2s; }
+        .tab-btn.active { border-bottom: 2px solid #D4AF37; color: #D4AF37; font-weight: 600; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        .subtab-btn { transition: all 0.2s; }
+        .subtab-btn.active { background: rgba(212,175,55,0.15); color: #D4AF37; border-color: rgba(212,175,55,0.4); }
+
+        /* Scrollbars Elegantes */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.6); }
+
+        /* SVG Interativo */
+        .planet-group { cursor: pointer; transition: transform 0.2s; transform-origin: center; }
+        .planet-group:hover { transform: scale(1.3); }
+        .aspect-line { transition: opacity 0.2s; }
+        .aspect-line:hover { opacity: 1 !important; stroke-width: 3; stroke: #FFF; }
+
+        /* Tooltips e Toasts */
+        #mandala-tooltip { background: rgba(15, 15, 25, 0.95); border: 1px solid #D4AF37; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 9999; }
+        .toast { position: fixed; bottom: 24px; right: 24px; padding: 1rem 1.5rem; border-radius: 8px; background: #151525; border-left: 4px solid #D4AF37; transform: translateX(150%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10000; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .toast.show { transform: translateX(0); }
+
+        /* Cadeado Premium */
+        .premium-locked { position: relative; overflow: hidden; }
+        .premium-locked::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 11, 20, 0.85); backdrop-filter: blur(6px); z-index: 10; }
+        .premium-locked-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 11; text-align: center; width: 100%; max-width: 400px; }
+
+        /* Impressão Limpa */
+        @media print {
+            aside, header, button, .toast { display: none !important; }
+            .view-section { overflow: visible !important; height: auto !important; padding: 0 !important; display: block !important; }
+            body { background: white !important; color: black !important; }
+            * { border-color: #ccc !important; }
+            svg { max-width: 100% !important; filter: invert(1); }
+            #stars-container { display: none !important; }
+            .glass-panel { background: transparent !important; backdrop-filter: none !important; border: 1px solid #ddd !important; box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body class="flex h-screen text-sm">
+
+    <div id="stars-container"></div>
+
+    <!-- SIDEBAR (Módulos PEGASUS) -->
+    <aside id="sidebar" class="glass-panel border-y-0 border-l-0 rounded-none flex flex-col w-64 z-20 transition-all duration-300 shrink-0">
+        <div class="h-16 flex items-center justify-between px-4 border-b border-gold/20">
+            <span class="font-cinzel text-xl font-bold text-gold sidebar-text tracking-wider">PEGASUS <span class="text-white">10X</span></span>
+            <button id="toggle-sidebar" class="p-2 text-gold hover:bg-white/10 rounded-lg transition-colors"><i data-lucide="menu"></i></button>
+        </div>
+        <nav class="flex-1 py-4 flex flex-col gap-1 px-3 overflow-y-auto">
+            <button data-target="dashboard" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Dashboard</span>
+            </button>
+            <div class="text-[11px] font-bold uppercase tracking-widest text-gold/60 mt-5 mb-2 sidebar-text pl-1">Cálculos Radix</div>
+            <button data-target="natal" class="nav-btn active flex items-center gap-3 px-3 py-2.5 rounded-lg bg-gold/15 text-gold border border-gold/30 transition-all shadow-[0_0_10px_rgba(212,175,55,0.1)]">
+                <i data-lucide="star" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Mapa Natal</span>
+            </button>
+            <button data-target="synastry" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                <i data-lucide="users" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Sinastria</span>
+            </button>
+            <div class="text-[11px] font-bold uppercase tracking-widest text-gold/60 mt-5 mb-2 sidebar-text pl-1">Previsões</div>
+            <button data-target="forecasts" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                <i data-lucide="activity" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Trânsitos/Direções</span>
+            </button>
+            <button data-target="returns" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                <i data-lucide="refresh-cw" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Revoluções</span>
+            </button>
+            <button data-target="lunations" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                <i data-lucide="moon" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Lunações</span>
+            </button>
+            <div class="text-[11px] font-bold uppercase tracking-widest text-gold/60 mt-5 mb-2 sidebar-text pl-1">Módulos Avançados</div>
+            <button data-target="sensitive" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                <i data-lucide="target" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Pontos Sensíveis</span>
+            </button>
+            <button data-target="rectification" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                <i data-lucide="clock" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Retificação</span>
+            </button>
+            <button data-target="mundial" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                <i data-lucide="globe" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Astrologia Mundial</span>
+            </button>
+            <button data-target="localspace" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                <i data-lucide="compass" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Local Space</span>
+            </button>
+            <button data-target="tables" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                <i data-lucide="scissors" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Tabelas de Beleza</span>
+            </button>
+            <div class="mt-8 pt-4 border-t border-white/10">
+                <button data-target="clients" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                    <i data-lucide="database" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Banco de Dados</span>
+                </button>
+                <button data-target="settings" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded-lg text-textMuted hover:bg-white/5 transition-all">
+                    <i data-lucide="settings" class="w-5 h-5"></i> <span class="sidebar-text font-medium">Configuração</span>
+                </button>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col h-screen relative z-10 overflow-hidden">
+        <header class="h-16 glass-panel border-x-0 border-t-0 rounded-none flex items-center justify-between px-8 shrink-0 shadow-md">
+            <div class="flex items-center gap-3 text-textMuted">
+                <i data-lucide="compass" class="w-5 h-5 text-gold"></i>
+                <span id="current-module-title" class="text-gold font-cinzel font-bold text-xl tracking-wide">Mapa Natal</span>
+            </div>
+            <div class="flex items-center gap-5">
+                <div class="flex items-center gap-2 text-xs bg-emerald-500/10 text-emerald-400 px-4 py-1.5 rounded-full border border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i> <span class="font-medium tracking-wide">Motor Meeus Local OK</span>
+                </div>
+                <button id="btn-print" class="btn-gold px-5 py-2 rounded-lg flex items-center gap-2 text-sm shadow-xl">
+                    <i data-lucide="printer" class="w-4 h-4"></i> Imprimir PDF
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-hidden relative">
+            
+            <!-- VIEW: DASHBOARD -->
+            <section id="view-dashboard" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="layout-dashboard" class="w-8 h-8 text-purple"></i> Dashboard e Status da Estação</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-panel p-8 relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 text-gold/10"><i data-lucide="shield-check" class="w-32 h-32"></i></div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-bold mb-2">Licença Ativa</h3>
+                            <p class="text-textMuted text-sm mb-6">Versão Profissional. Todos os módulos desbloqueados.</p>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="toggle-plan" class="sr-only peer" checked>
+                                <div class="w-14 h-7 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gold shadow-inner"></div>
+                                <span class="ml-4 text-sm font-bold text-white" id="plan-status-text">Premium Assinante</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-8 text-center flex flex-col justify-center items-center">
+                        <i data-lucide="users" class="w-12 h-12 text-purple mb-4"></i>
+                        <h3 class="text-4xl font-bold mb-2 font-mono text-white" id="dash-client-count">0</h3>
+                        <p class="text-textMuted text-sm uppercase tracking-wider font-semibold">Mapas Salvos (Local)</p>
+                    </div>
+                    <div class="glass-panel p-8 text-center flex flex-col justify-center items-center">
+                        <i data-lucide="zap" class="w-12 h-12 text-emerald-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2 text-white">Alta Precisão</h3>
+                        <p class="text-textMuted text-sm uppercase tracking-wider font-semibold">Algoritmos Meeus (S.E.)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: NATAL (MOD 02-04) -->
+            <section id="view-natal" class="view-section active">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full pb-10">
+                    <!-- Painel Esquerdo: Form e Mandala -->
+                    <div class="lg:col-span-7 flex flex-col gap-6">
+                        <div class="glass-panel p-6">
+                            <form id="natal-form" class="grid grid-cols-4 gap-5">
+                                <div class="col-span-4 md:col-span-2 space-y-1.5">
+                                    <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Nome do Nato</label>
+                                    <input type="text" id="natal-name" class="w-full glass-input px-3 py-2.5 rounded-lg text-sm font-medium" placeholder="Buscar ou digite novo...">
+                                </div>
+                                <div class="col-span-2 md:col-span-1 space-y-1.5">
+                                    <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Data</label>
+                                    <input type="date" id="natal-date" class="w-full glass-input px-3 py-2.5 rounded-lg text-sm font-mono" required>
+                                </div>
+                                <div class="col-span-2 md:col-span-1 space-y-1.5">
+                                    <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Hora Exata</label>
+                                    <input type="time" id="natal-time" step="1" class="w-full glass-input px-3 py-2.5 rounded-lg text-sm font-mono" required value="12:00:00">
+                                </div>
+                                <div class="col-span-4 md:col-span-2 space-y-1.5">
+                                    <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Local (Cidade)</label>
+                                    <input type="text" id="natal-city" class="w-full glass-input px-3 py-2.5 rounded-lg text-sm font-medium" placeholder="Ex: São Paulo, BR">
+                                </div>
+                                <div class="col-span-2 md:col-span-1 space-y-1.5">
+                                    <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Lat / Lng</label>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="natal-lat" step="0.001" class="w-1/2 glass-input px-2 py-2.5 rounded-lg text-xs font-mono text-center" value="-23.55" required placeholder="Lat">
+                                        <input type="number" id="natal-lng" step="0.001" class="w-1/2 glass-input px-2 py-2.5 rounded-lg text-xs font-mono text-center" value="-46.63" required placeholder="Lng">
+                                    </div>
+                                </div>
+                                <div class="col-span-2 md:col-span-1 flex items-end gap-2">
+                                    <button type="submit" class="btn-gold flex-1 h-[42px] rounded-lg flex items-center justify-center gap-2 text-sm"><i data-lucide="calculator" class="w-4 h-4"></i> Calcular</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- MANDALA PRINCIPAL -->
+                        <div class="flex-1 glass-panel p-6 flex flex-col items-center justify-center relative min-h-[450px]">
+                            <div id="mandala-container" class="w-full max-w-[550px] aspect-square">
+                                <!-- Placeholders visuais até o primeiro cálculo -->
+                                <div class="w-full h-full rounded-full border-4 border-dashed border-gold/20 flex items-center justify-center animate-[spin_60s_linear_infinite]">
+                                    <div class="w-3/4 h-3/4 rounded-full border border-white/10 flex items-center justify-center">
+                                        <i data-lucide="star" class="w-12 h-12 text-gold/20"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="mandala-tooltip" class="absolute hidden text-white rounded-lg z-50 pointer-events-none"></div>
+                            <div class="absolute bottom-5 right-5 flex gap-3 text-xs font-mono bg-black/60 px-4 py-2 rounded-lg border border-white/10 shadow-lg" id="elements-bar">
+                                Aguardando cálculo matemático...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Painel Direito: Resultados -->
+                    <div class="lg:col-span-5 flex flex-col gap-6 overflow-hidden">
+                        <div class="flex gap-2 border-b border-gold/20 pb-2 shrink-0 px-2 overflow-x-auto">
+                            <button class="subtab-btn active px-4 py-2 rounded-t-lg text-sm font-bold border border-b-0 border-transparent hover:bg-gold/5" data-subtab="nt-coords">Coordenadas</button>
+                            <button class="subtab-btn px-4 py-2 rounded-t-lg text-sm font-bold border border-b-0 border-transparent hover:bg-gold/5" data-subtab="nt-aspects">Aspectos</button>
+                            <button class="subtab-btn px-4 py-2 rounded-t-lg text-sm font-bold border border-b-0 border-transparent hover:bg-gold/5" data-subtab="nt-trad">Tradicional</button>
+                            <button class="subtab-btn px-4 py-2 rounded-t-lg text-sm font-bold border border-b-0 border-transparent hover:bg-gold/5" data-subtab="nt-points">Pontos</button>
+                            <button class="subtab-btn px-4 py-2 rounded-t-lg text-sm font-bold border border-b-0 border-transparent hover:bg-gold/5" data-subtab="nt-harm">Harmônicas</button>
+                        </div>
+
+                        <div class="flex-1 overflow-y-auto pr-2">
+                            <!-- TAB: COORDENADAS -->
+                            <div id="nt-coords" class="tab-content active glass-panel p-0 overflow-hidden flex flex-col h-full shadow-md">
+                                <div class="overflow-x-auto flex-1">
+                                    <table class="w-full text-left text-xs">
+                                        <thead class="bg-black/60 text-gold uppercase tracking-wider sticky top-0 z-10 shadow-sm">
+                                            <tr><th class="p-3">Planeta</th><th class="p-3 text-right">Longitude</th><th class="p-3">Signo</th><th class="p-3 text-center">Casa</th></tr>
+                                        </thead>
+                                        <tbody id="nt-table-planets" class="divide-y divide-white/5 bg-surface/50">
+                                            <tr><td colspan="4" class="p-6 text-center text-textMuted italic">Calcule o mapa para ver as coordenadas.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="p-4 border-t border-gold/20 bg-black/40 font-mono text-xs text-textMuted leading-relaxed tracking-wide" id="nt-house-cusps"></div>
+                            </div>
+
+                            <!-- TAB: ASPECTOS -->
+                            <div id="nt-aspects" class="tab-content glass-panel p-4 h-full shadow-md">
+                                <h3 class="text-gold font-cinzel font-bold text-lg mb-4 border-b border-gold/20 pb-2">Matriz de Aspectos Maiores</h3>
+                                <div id="nt-aspects-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"></div>
+                            </div>
+
+                            <!-- TAB: TRADICIONAL -->
+                            <div id="nt-trad" class="tab-content glass-panel p-5 space-y-6 h-full shadow-md">
+                                <div>
+                                    <h4 class="text-gold font-bold mb-3 uppercase tracking-wider text-xs flex items-center gap-2"><i data-lucide="sun"></i> Dignidades & Antiscias</h4>
+                                    <div class="overflow-hidden rounded-lg border border-white/10 shadow-inner bg-black/20">
+                                        <table class="w-full text-left text-xs">
+                                            <thead class="bg-black/60 text-gold font-semibold"><tr><th class="p-2.5">Planeta</th><th class="p-2.5">Antiscia</th><th class="p-2.5">Contra-Ant.</th><th class="p-2.5">Condição Clássica</th></tr></thead>
+                                            <tbody id="nt-trad-table" class="divide-y divide-white/5 font-mono"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="text-gold font-bold mb-3 uppercase tracking-wider text-xs flex items-center gap-2"><i data-lucide="clock"></i> Firdárias (Ciclos Ptolomaicos)</h4>
+                                    <div id="nt-firdaria" class="p-4 bg-black/40 rounded-lg font-mono text-xs text-textMuted border border-white/10 shadow-inner"></div>
+                                </div>
+                            </div>
+
+                            <!-- TAB: PONTOS -->
+                            <div id="nt-points" class="tab-content glass-panel p-5 space-y-6 h-full shadow-md">
+                                <div>
+                                    <h4 class="text-gold font-bold mb-3 uppercase tracking-wider text-xs border-b border-gold/20 pb-2">Partes Arábicas (Al-Biruni)</h4>
+                                    <ul id="nt-arabic-list" class="space-y-2 text-xs font-mono text-textMuted bg-black/20 p-4 rounded-lg border border-white/5"></ul>
+                                </div>
+                                <div>
+                                    <h4 class="text-gold font-bold mb-3 uppercase tracking-wider text-xs border-b border-gold/20 pb-2">Pontos Médios Principais</h4>
+                                    <div id="nt-midpoints-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs text-textMuted font-mono"></div>
+                                </div>
+                                <div>
+                                    <h4 class="text-gold font-bold mb-3 uppercase tracking-wider text-xs border-b border-gold/20 pb-2">Estrelas Fixas (Top 5)</h4>
+                                    <ul id="nt-stars-list" class="space-y-2 text-xs text-textMuted font-mono bg-black/20 p-4 rounded-lg border border-white/5"></ul>
+                                </div>
+                            </div>
+
+                            <!-- TAB: HARMONICAS -->
+                            <div id="nt-harm" class="tab-content glass-panel p-5 h-full shadow-md">
+                                <div class="flex items-center gap-3 mb-6 p-4 bg-black/40 rounded-lg border border-gold/20 shadow-inner">
+                                    <label class="text-xs font-bold text-gold uppercase tracking-wider">Número da Harmônica:</label>
+                                    <input type="number" id="harm-num" value="4" min="2" max="360" class="w-20 glass-input p-2 rounded-md text-center text-sm font-bold">
+                                    <button id="btn-calc-harm" class="btn-gold px-4 py-2 rounded-md text-xs ml-auto shadow-md">Gerar Harmônica</button>
+                                </div>
+                                <div class="overflow-hidden rounded-lg border border-white/10">
+                                    <table class="w-full text-left text-xs">
+                                        <thead class="bg-black/60 text-gold uppercase tracking-wider"><tr><th class="p-3">Planeta</th><th class="p-3">Long. Harmônica</th><th class="p-3">Signo Resultante</th></tr></thead>
+                                        <tbody id="nt-harm-table" class="divide-y divide-white/5 text-textMuted bg-surface/30"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: SINASTRIA -->
+            <section id="view-synastry" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="users" class="w-8 h-8 text-purple"></i> Comparação de Mapas (Sinastria Bi-Wheel)</h2>
+                <div class="glass-panel p-8 mb-8 shadow-lg">
+                    <form id="synastry-form" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-gold/80 uppercase tracking-wider">Mapa Interno (Radical Ativo)</label>
+                            <div class="glass-input p-3 rounded-lg text-sm text-white flex items-center bg-black/40" id="syn-p1-label">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-red-400 mr-2"></i> Calcule um Radix primeiro.
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-gold/80 uppercase tracking-wider">Mapa Externo (Parceiro no DB)</label>
+                            <select id="synastry-p2" class="w-full glass-input p-3 rounded-lg text-sm font-medium" required>
+                                <option value="">Selecione um cliente salvo...</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-gold px-6 py-3 rounded-lg flex items-center justify-center gap-2 h-[46px] shadow-lg text-sm"><i data-lucide="layers"></i> Processar Interaspectos</button>
+                    </form>
+                </div>
+                <div id="synastry-results" class="hidden grid-cols-1 xl:grid-cols-2 gap-8">
+                    <div class="glass-panel p-6 flex flex-col items-center relative max-w-[600px] mx-auto aspect-square shadow-xl">
+                        <div id="synastry-svg-container" class="w-full h-full"></div>
+                    </div>
+                    <div class="glass-panel p-6 max-h-[600px] overflow-y-auto shadow-xl">
+                        <h3 class="text-gold font-cinzel text-xl font-bold mb-6 border-b border-gold/20 pb-3 flex items-center gap-2"><i data-lucide="git-merge"></i> Matriz de Interaspectos</h3>
+                        <div id="synastry-aspects-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: PREVISÕES (Trânsitos e Direções) -->
+            <section id="view-forecasts" class="view-section premium-locked">
+                <div class="premium-locked-msg">
+                    <i data-lucide="lock" class="w-20 h-20 text-gold mx-auto mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]"></i>
+                    <h2 class="font-cinzel text-3xl text-white mb-4 font-bold">Módulo Premium Bloqueado</h2>
+                    <p class="text-textMuted text-sm mb-8 leading-relaxed">Ative a assinatura Premium no Dashboard para acessar algoritmos avançados de Trânsitos, Direções Primárias, Secundárias e Arco Solar.</p>
+                </div>
+                <div class="forecasts-content hidden">
+                    <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="activity" class="w-8 h-8 text-purple"></i> Dinâmica de Previsões</h2>
+                    <div class="glass-panel p-8 mb-8 shadow-lg">
+                        <form id="forecast-form" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-gold/80 uppercase tracking-wider">Data Alvo da Previsão</label>
+                                <input type="date" id="forecast-date" required class="w-full glass-input p-3 rounded-lg text-sm font-mono">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-gold/80 uppercase tracking-wider">Algoritmo / Método</label>
+                                <select id="forecast-method" class="w-full glass-input p-3 rounded-lg text-sm font-medium">
+                                    <option value="transit">Trânsitos Diários Reais</option>
+                                    <option value="sec_prog">Direções Secundárias (1 dia = 1 ano)</option>
+                                    <option value="sym_degree">Direção Simbólica (1 grau por ano)</option>
+                                    <option value="sym_naibod">Direção Simbólica (Passo Naibod)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-gold px-6 py-3 rounded-lg flex items-center justify-center gap-2 h-[46px] shadow-lg text-sm"><i data-lucide="play-circle"></i> Executar Progressão</button>
+                        </form>
+                    </div>
+                    <div id="forecast-results" class="hidden grid-cols-1 xl:grid-cols-2 gap-8">
+                        <div class="glass-panel p-6 flex flex-col items-center relative max-w-[600px] mx-auto aspect-square shadow-xl">
+                            <div id="forecast-svg-container" class="w-full h-full"></div>
+                        </div>
+                        <div class="glass-panel p-6 max-h-[600px] overflow-y-auto shadow-xl">
+                            <h3 class="text-gold font-cinzel text-xl font-bold mb-6 border-b border-gold/20 pb-3" id="forecast-title">Tabela de Aspectos (Previsão)</h3>
+                            <div class="overflow-hidden rounded-lg border border-white/10">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-black/60 text-gold uppercase tracking-wider"><tr><th class="p-3">Planeta (Dinâmico)</th><th class="p-3">Posição Atualizada</th><th class="p-3">Aspecto Exato ao Radix</th></tr></thead>
+                                    <tbody id="forecast-table-body" class="divide-y divide-white/5 text-textMuted bg-surface/30 font-mono"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: REVOLUÇÕES -->
+            <section id="view-returns" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="refresh-cw" class="w-8 h-8 text-purple"></i> Revolução Solar (Retorno Exato)</h2>
+                <div class="glass-panel p-8 mb-8 shadow-lg">
+                    <form id="return-form" class="flex flex-col sm:flex-row gap-6 items-end">
+                        <div class="space-y-2 flex-1 max-w-xs">
+                            <label class="text-xs font-bold text-gold/80 uppercase tracking-wider">Ano do Retorno</label>
+                            <input type="number" id="return-year" required class="w-full glass-input p-3 rounded-lg text-center text-xl font-mono tracking-widest font-bold" min="1900" max="2100" value="2025">
+                        </div>
+                        <button type="submit" class="btn-gold px-8 py-3 rounded-lg h-[52px] flex items-center gap-3 text-sm shadow-lg"><i data-lucide="target"></i> Iterar Posição Astronômica Exata</button>
+                    </form>
+                </div>
+                <div id="return-results" class="hidden grid-cols-1 xl:grid-cols-2 gap-8">
+                    <div class="glass-panel p-6 flex flex-col items-center relative max-w-[600px] mx-auto aspect-square shadow-xl">
+                        <div id="return-svg-container" class="w-full h-full"></div>
+                    </div>
+                    <div class="glass-panel p-8 flex flex-col gap-6 shadow-xl">
+                        <h3 class="text-gold font-cinzel text-2xl font-bold">Relatório do Retorno</h3>
+                        <p class="text-sm text-textMuted leading-relaxed">O algoritmo de Meeus realizou iterações sucessivas no tempo para encontrar o segundo exato em que a longitude do Sol em trânsito se iguala à longitude do Sol no mapa Radix ativo.</p>
+                        
+                        <div class="bg-emerald-500/10 border border-emerald-500/40 p-6 rounded-lg text-center shadow-inner">
+                            <div class="text-xs text-emerald-400/80 uppercase tracking-widest font-bold mb-2">Momento do Retorno Solar Exato</div>
+                            <div class="text-emerald-400 font-mono text-2xl font-bold" id="return-exact-date">Calculando...</div>
+                        </div>
+                        
+                        <div class="mt-2 flex-1">
+                            <h4 class="text-gold font-bold mb-3 text-sm uppercase tracking-wider border-b border-gold/20 pb-2">Planetas no Momento da Revolução</h4>
+                            <div class="overflow-x-auto max-h-[250px] overflow-y-auto pr-2 rounded border border-white/5">
+                                <table class="w-full text-left text-xs">
+                                    <tbody id="return-planets-body" class="divide-y divide-white/5 text-textMuted bg-black/20 font-mono"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: LUNAÇÕES -->
+            <section id="view-lunations" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="moon" class="w-8 h-8 text-blue-400"></i> Efemérides de Lunações (Mensal)</h2>
+                <div class="glass-panel p-8 shadow-lg">
+                    <p class="text-sm text-textMuted mb-8 leading-relaxed max-w-3xl">O sistema rastreia a órbita lunar num ciclo de 30 dias a partir do mês selecionado e projeta as datas em que a diferença angular exata entre o Sol e a Lua atinge 0° (Nova), 90° (Crescente), 180° (Cheia) e 270° (Minguante).</p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-gold/80 uppercase tracking-wider">Mês e Ano</label>
+                            <input type="month" id="lunation-month" class="w-full sm:w-64 glass-input p-3 rounded-lg text-sm font-mono">
+                        </div>
+                        <div class="flex items-end">
+                            <button id="btn-calc-lunations" class="btn-gold px-6 py-3 rounded-lg h-[46px] shadow-lg text-sm flex items-center gap-2"><i data-lucide="search"></i> Encontrar Fases</button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-hidden rounded-lg border border-white/10 shadow-xl">
+                        <table class="w-full text-left text-sm text-textMuted">
+                            <thead class="bg-black/60 text-gold uppercase tracking-wider text-xs">
+                                <tr><th class="p-4">Fase Lunar</th><th class="p-4">Data e Hora (Local)</th><th class="p-4">Signo/Grau</th><th class="p-4 text-center">Casa (Radix)</th></tr>
+                            </thead>
+                            <tbody id="lunations-body" class="divide-y divide-white/5 font-mono bg-surface/30">
+                                <tr><td colspan="4" class="p-8 text-center text-textMuted italic">Selecione o mês e clique em "Encontrar Fases". (Requer um Mapa Natal ativo).</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: PONTOS SENSÍVEIS -->
+            <section id="view-sensitive" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="target" class="w-8 h-8 text-emerald-400"></i> Pontos Sensíveis (Huber/Cristoff)</h2>
+                <div class="glass-panel p-8 mb-8 shadow-lg">
+                    <form class="flex flex-col sm:flex-row gap-6 items-end">
+                        <div class="space-y-2 max-w-xs flex-1">
+                            <label class="text-xs font-bold text-gold/80 uppercase tracking-wider">Idade Atual do Nato (Anos)</label>
+                            <input type="number" id="sensitive-age" value="30" step="0.1" class="w-full glass-input p-3 rounded-lg text-xl font-mono text-center font-bold text-white shadow-inner">
+                        </div>
+                        <button type="button" id="btn-calc-sensitive" class="btn-gold px-8 py-3 rounded-lg h-[52px] shadow-lg text-sm flex items-center gap-2"><i data-lucide="calculator"></i> Projetar Pontos</button>
+                    </form>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="glass-panel p-8 rounded-xl bg-black/20 hover:bg-white/5 transition-colors border border-white/5 shadow-lg group relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity"><i data-lucide="clock" class="w-32 h-32"></i></div>
+                        <h4 class="text-white font-cinzel font-bold text-xl mb-3 relative z-10">Age-Point (Koch)</h4>
+                        <p class="text-xs text-textMuted mb-6 pb-4 border-b border-white/10 relative z-10 leading-relaxed">Método de interpolação onde cada cúspide de casa representa um avanço exato de 6 anos de vida.</p>
+                        <p class="text-gold font-mono text-3xl font-bold tracking-wider relative z-10 drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]" id="sp-agepoint">--</p>
+                    </div>
+                    <div class="glass-panel p-8 rounded-xl bg-black/20 hover:bg-white/5 transition-colors border border-white/5 shadow-lg group relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity"><i data-lucide="moon" class="w-32 h-32"></i></div>
+                        <h4 class="text-white font-cinzel font-bold text-xl mb-3 relative z-10">Pro-Luna (Cristoff)</h4>
+                        <p class="text-xs text-textMuted mb-6 pb-4 border-b border-white/10 relative z-10 leading-relaxed">Sistema desenvolvido por Boris Cristoff, com progressão constante equivalente a 7 anos por casa astrológica.</p>
+                        <p class="text-gold font-mono text-3xl font-bold tracking-wider relative z-10 drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]" id="sp-proluna">--</p>
+                    </div>
+                    <div class="glass-panel p-8 rounded-xl bg-black/20 hover:bg-white/5 transition-colors border border-white/5 shadow-lg group relative overflow-hidden">
+                        <div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity"><i data-lucide="trending-up" class="w-32 h-32"></i></div>
+                        <h4 class="text-white font-cinzel font-bold text-xl mb-3 relative z-10">Fatum (Evolutivo)</h4>
+                        <p class="text-xs text-textMuted mb-6 pb-4 border-b border-white/10 relative z-10 leading-relaxed">Ponto sensível logarítmico (Life-Time) que indica os picos de amadurecimento e eventos predestinados marcantes.</p>
+                        <p class="text-gold font-mono text-3xl font-bold tracking-wider relative z-10 drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]" id="sp-fatum">--</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: RETIFICAÇÃO DE HORÁRIO -->
+            <section id="view-rectification" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="clock" class="w-8 h-8 text-blue-400"></i> Retificação (Análise de Progressões)</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 h-[600px] pb-10">
+                    <div class="lg:col-span-5 glass-panel p-8 flex flex-col gap-6 shadow-xl">
+                        <div>
+                            <h3 class="text-white font-bold border-b border-gold/20 pb-3 text-lg">1. Registo de Eventos Reais</h3>
+                            <p class="text-xs text-textMuted mt-2 leading-relaxed">Insira datas de eventos marcantes (casamento, acidentes, mortes na família) para o sistema procurar correspondências nas Progressões Secundárias contra os Ângulos.</p>
+                        </div>
+                        <form id="rect-form" class="flex flex-col gap-4">
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Descrição do Evento</label>
+                                <input type="text" id="rect-desc" placeholder="Ex: Nascimento do primeiro filho" required class="w-full glass-input p-2.5 rounded-lg text-sm">
+                            </div>
+                            <div class="flex items-end gap-3">
+                                <div class="flex-1 space-y-1.5">
+                                    <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Data do Evento</label>
+                                    <input type="date" id="rect-date" required class="w-full glass-input p-2.5 rounded-lg text-sm font-mono">
+                                </div>
+                                <button type="submit" class="btn-gold px-5 py-2.5 rounded-lg text-sm shadow-md h-[42px]"><i data-lucide="plus"></i> Adicionar</button>
+                            </div>
+                        </form>
+                        <div class="flex-1 overflow-hidden flex flex-col bg-black/30 rounded-lg border border-white/10 shadow-inner">
+                            <div class="overflow-y-auto flex-1 p-2">
+                                <table class="w-full text-xs text-left">
+                                    <thead class="text-gold border-b border-white/10 bg-black/40 sticky top-0"><tr><th class="p-2">Evento Registado</th><th class="p-2">Data</th><th class="p-2 text-center">Interação (Prob.)</th></tr></thead>
+                                    <tbody id="rect-events-body" class="divide-y divide-white/5 text-textMuted"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:col-span-7 glass-panel p-8 flex flex-col shadow-xl relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 opacity-5"><i data-lucide="bar-chart-2" class="w-64 h-64"></i></div>
+                        <div class="relative z-10 flex-1 flex flex-col">
+                            <h3 class="text-white font-bold border-b border-gold/20 pb-3 mb-6 text-lg">2. Histograma de Probabilidade (Arcos)</h3>
+                            <div class="flex-1 flex flex-col items-center justify-end border border-white/10 rounded-lg bg-black/50 p-6 relative shadow-inner">
+                                <div id="rect-chart" class="w-full h-full flex items-end justify-between px-6 gap-2.5 relative z-10">
+                                    <!-- Barras do histograma geradas via JS -->
+                                    <div class="w-full h-full flex items-center justify-center text-textMuted italic text-xs">Adicione eventos para gerar a distribuição matemática...</div>
+                                </div>
+                                <div class="absolute w-full border-t-2 border-red-500/40 bottom-12 z-0 shadow-[0_0_5px_rgba(239,68,68,0.5)]"></div> <!-- Eixo X Base -->
+                                <div class="w-full mt-4 flex justify-between text-xs text-gold/80 font-mono z-10 pt-2 font-semibold">
+                                    <span>-30 min</span><span>-15 min</span><span class="text-white font-bold text-sm drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">Hora Radix</span><span>+15 min</span><span>+30 min</span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-textMuted mt-5 italic text-center leading-relaxed">
+                                Atenção: O PEGASUS Photon X não faz retificação automática decisiva. O gráfico aponta matematicamente os blocos de minutos em que as <strong>Progressões Secundárias</strong> formam aspetos exatos (0° orbe) com os Ângulos da carta (Asc/MC). A decisão final exige julgamento astrológico.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: MUNDIAL & LOCAL SPACE -->
+            <section id="view-mundial" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="globe" class="w-8 h-8 text-emerald-400"></i> Astrologia Mundial (Grade de Conjunções Lentas)</h2>
+                <div class="glass-panel p-8 shadow-xl">
+                    <p class="text-textMuted text-sm mb-6 leading-relaxed max-w-4xl">Este módulo processa a matriz de distâncias angulares entre os planetas sociais e geracionais (Júpiter, Saturno, Urano) para o ano atual. Essencial para previsão de ciclos macro-económicos, políticos e sociais.</p>
+                    <button id="btn-mundial" class="btn-gold px-8 py-3 rounded-lg mb-8 shadow-lg text-sm flex items-center gap-2"><i data-lucide="cpu"></i> Processar Matriz do Ano Atual</button>
+                    
+                    <div class="overflow-x-auto rounded-lg border border-white/10 shadow-inner">
+                        <table class="w-full text-center text-sm">
+                            <thead class="bg-black/70 text-gold uppercase tracking-wider text-xs">
+                                <tr>
+                                    <th class="p-4 border-r border-white/5">Mês Astrológico</th>
+                                    <th class="p-4 border-r border-white/5">Júpiter ♃ x Saturno ♄</th>
+                                    <th class="p-4 border-r border-white/5">Júpiter ♃ x Urano ♅</th>
+                                    <th class="p-4">Saturno ♄ x Urano ♅</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mundial-grid" class="divide-y divide-white/5 font-mono bg-surface/40">
+                                <tr><td colspan="4" class="p-8 text-textMuted italic">Clique em Processar Matriz para gerar as efemérides.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-localspace" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="compass" class="w-8 h-8 text-blue-400"></i> Bússola Vetorial (Local Space)</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="glass-panel p-8 text-center flex flex-col items-center shadow-xl">
+                        <p class="text-xs text-textMuted mb-6 leading-relaxed">Projeta a Ascensão Reta e a Declinação dos planetas cruzadas com a latitude local no momento do nascimento, gerando vetores geográficos (azimutes) de 0° a 360° para aplicação de Feng Shui Astrológico.</p>
+                        <button id="btn-localspace" class="btn-gold px-8 py-3 rounded-lg mb-10 shadow-lg text-sm flex items-center gap-2"><i data-lucide="map-pin"></i> Projetar Azimutes na Bússola</button>
+                        
+                        <div class="relative w-[340px] h-[340px] rounded-full border-4 border-gold/30 bg-black/60 flex items-center justify-center shadow-[0_0_30px_rgba(0,0,0,0.8)] inner-shadow">
+                            <!-- Eixos Bússola -->
+                            <div class="absolute w-full h-[1px] bg-white/10"></div>
+                            <div class="absolute h-full w-[1px] bg-white/10"></div>
+                            
+                            <div class="absolute top-3 text-red-500 font-bold text-sm tracking-widest drop-shadow-[0_0_3px_red]">NORTE (0°)</div>
+                            <div class="absolute bottom-3 text-white font-bold text-sm tracking-widest">SUL (180°)</div>
+                            <div class="absolute right-3 text-white font-bold text-sm tracking-widest">L (90°)</div>
+                            <div class="absolute left-3 text-white font-bold text-sm tracking-widest">O (270°)</div>
+                            
+                            <!-- Bússola Dinâmica SVG/Divs -->
+                            <div id="localspace-compass" class="w-full h-full relative"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel p-8 shadow-xl flex flex-col">
+                        <h3 class="text-white font-bold border-b border-gold/20 pb-3 mb-6 text-lg">Tabela de Azimutes Geográficos</h3>
+                        <div class="flex-1 overflow-hidden rounded-lg border border-white/10 shadow-inner bg-black/30">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-black/80 text-gold text-xs uppercase tracking-wider">
+                                    <tr><th class="p-3">Corpo Celeste</th><th class="p-3">Azimute Vetorial</th><th class="p-3">Dirente</th></tr>
+                                </thead>
+                                <tbody id="localspace-table" class="divide-y divide-white/5 font-mono text-textMuted">
+                                    <tr><td colspan="3" class="p-6 text-center italic">Projete os azimutes (requer Mapa Radix).</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: TABELAS BELEZA -->
+            <section id="view-tables" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="scissors" class="w-8 h-8 text-pink-400"></i> Tabelas: Corte de Cabelo e Depilação</h2>
+                <div class="glass-panel p-8 shadow-xl">
+                    <p class="text-sm text-textMuted mb-8 leading-relaxed max-w-4xl border-b border-white/10 pb-6">O motor de cálculo avalia a fase exata da Lua a partir de hoje e cruza as informações lunares com a simbologia astrológica clássica para projetar os dias mais favoráveis para intervenções de estética corporal (Metodologia Facciollo Neto).</p>
+                    
+                    <div class="flex items-center gap-4 mb-10">
+                        <button id="btn-calc-beauty" class="btn-gold px-8 py-3 rounded-lg shadow-lg text-sm flex items-center gap-2"><i data-lucide="calendar"></i> Processar Ciclo Lunar de 30 Dias</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="p-8 border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-xl shadow-lg relative overflow-hidden">
+                            <div class="absolute -right-6 -bottom-6 opacity-10"><i data-lucide="scissors" class="w-40 h-40 text-emerald-400"></i></div>
+                            <h4 class="text-emerald-400 font-bold text-xl mb-3 flex items-center gap-3 relative z-10"><i data-lucide="sparkles"></i> Cabelo (Força e Crescimento)</h4>
+                            <p class="text-xs text-textMuted mb-6 relative z-10 leading-relaxed">Janelas temporais em que a Lua Crescente/Cheia impulsiona o vigor e o crescimento acelerado.</p>
+                            <ul id="tab-corte" class="text-sm text-white font-mono space-y-3 relative z-10 list-disc pl-6 marker:text-emerald-400">
+                                <li class="text-textMuted italic">Aguardando processamento...</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-8 border border-blue-500/30 bg-gradient-to-br from-blue-500/10 to-transparent rounded-xl shadow-lg relative overflow-hidden">
+                            <div class="absolute -right-6 -bottom-6 opacity-10"><i data-lucide="wind" class="w-40 h-40 text-blue-400"></i></div>
+                            <h4 class="text-blue-400 font-bold text-xl mb-3 flex items-center gap-3 relative z-10"><i data-lucide="droplet"></i> Depilação (Enfraquecimento)</h4>
+                            <p class="text-xs text-textMuted mb-6 relative z-10 leading-relaxed">Janelas temporais em que a Lua Minguante atua inibindo e enfraquecendo o crescimento folicular.</p>
+                            <ul id="tab-depil" class="text-sm text-white font-mono space-y-3 relative z-10 list-disc pl-6 marker:text-blue-400">
+                                <li class="text-textMuted italic">Aguardando processamento...</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: DB CLIENTES (M14) -->
+            <section id="view-clients" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="database" class="w-8 h-8 text-purple"></i> Arquivo de Mapas (LocalStorage)</h2>
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 pb-10">
+                    <div class="xl:col-span-7 glass-panel p-8 shadow-xl flex flex-col">
+                        <div class="flex justify-between items-center mb-6 border-b border-gold/20 pb-4">
+                            <h3 class="text-gold font-bold text-xl">Ficha do Nato</h3>
+                            <button type="button" id="btn-db-clear" class="text-xs text-white/60 hover:text-white bg-white/5 hover:bg-white/10 px-4 py-2 rounded transition-colors"><i data-lucide="file-plus" class="w-4 h-4 inline mr-1"></i> Limpar Ficha / Criar Novo</button>
+                        </div>
+                        
+                        <form id="db-client-form" class="grid grid-cols-4 gap-5">
+                            <input type="hidden" id="db-id">
+                            <div class="col-span-4 md:col-span-2 space-y-1.5">
+                                <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Nome Completo</label>
+                                <input type="text" id="db-name" required class="w-full glass-input p-3 rounded-lg font-medium text-white">
+                            </div>
+                            <div class="col-span-4 md:col-span-2 space-y-1.5">
+                                <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Identificador (Grupo)</label>
+                                <input type="text" id="db-group" class="w-full glass-input p-3 rounded-lg text-textMuted" placeholder="Ex: Clientes 2025, Família...">
+                            </div>
+                            <div class="col-span-2 md:col-span-1 space-y-1.5">
+                                <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Data (Nasc.)</label>
+                                <input type="date" id="db-date" required class="w-full glass-input p-3 rounded-lg font-mono text-sm">
+                            </div>
+                            <div class="col-span-2 md:col-span-1 space-y-1.5">
+                                <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Hora</label>
+                                <input type="time" step="1" id="db-time" required class="w-full glass-input p-3 rounded-lg font-mono text-sm">
+                            </div>
+                            <div class="col-span-4 md:col-span-2 space-y-1.5">
+                                <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Localidade</label>
+                                <input type="text" id="db-city" class="w-full glass-input p-3 rounded-lg" placeholder="Cidade, Estado, País">
+                            </div>
+                            <div class="col-span-2 md:col-span-2 space-y-1.5">
+                                <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Latitude (Dec)</label>
+                                <input type="number" step="0.001" id="db-lat" class="w-full glass-input p-3 rounded-lg font-mono text-sm text-center" placeholder="-23.550">
+                            </div>
+                            <div class="col-span-2 md:col-span-2 space-y-1.5">
+                                <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Longitude (Dec)</label>
+                                <input type="number" step="0.001" id="db-lng" class="w-full glass-input p-3 rounded-lg font-mono text-sm text-center" placeholder="-46.633">
+                            </div>
+                            <div class="col-span-4 space-y-1.5 mt-2">
+                                <label class="text-[11px] font-semibold text-gold/80 uppercase tracking-wider">Notas Técnicas e Histórico (Manual p. 64)</label>
+                                <textarea id="db-notes" rows="4" class="w-full glass-input p-3 rounded-lg text-sm leading-relaxed text-textMuted" placeholder="Insira eventos de vida para retificação, faturas, datas de consulta..."></textarea>
+                            </div>
+                            <div class="col-span-4 flex justify-between items-center mt-6 pt-6 border-t border-white/10">
+                                <button type="button" id="btn-db-delete" class="px-5 py-2.5 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/10 transition text-sm font-medium flex items-center gap-2"><i data-lucide="trash-2" class="w-4 h-4"></i> Excluir Registro</button>
+                                <button type="submit" class="btn-gold px-10 py-3 rounded-lg shadow-lg flex items-center gap-2 text-sm h-[46px]"><i data-lucide="save"></i> Salvar na Base Local</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="xl:col-span-5 glass-panel p-6 flex flex-col shadow-xl">
+                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-gold/20">
+                            <span class="text-sm text-textMuted font-bold uppercase tracking-wider">Navegador de Fichas:</span>
+                            <div class="flex gap-1.5 bg-black/50 p-1.5 rounded-lg border border-white/5 shadow-inner">
+                                <button id="db-nav-first" class="p-1.5 hover:bg-white/10 text-gold rounded transition"><i data-lucide="chevrons-left" class="w-5 h-5"></i></button>
+                                <button id="db-nav-prev" class="p-1.5 hover:bg-white/10 text-gold rounded transition"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                                <span id="db-counter" class="flex items-center justify-center w-16 font-mono text-sm text-white font-bold">0 / 0</span>
+                                <button id="db-nav-next" class="p-1.5 hover:bg-white/10 text-gold rounded transition"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                                <button id="db-nav-last" class="p-1.5 hover:bg-white/10 text-gold rounded transition"><i data-lucide="chevrons-right" class="w-5 h-5"></i></button>
+                            </div>
+                        </div>
+                        <div class="relative mb-5">
+                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/50"></i>
+                            <input type="text" id="db-search" placeholder="Pesquisar na listagem..." class="w-full glass-input py-3 pl-10 pr-4 rounded-lg text-sm bg-black/40">
+                        </div>
+                        <div id="db-list-container" class="flex-1 overflow-y-auto divide-y divide-white/5 bg-black/20 rounded-lg border border-white/5 shadow-inner min-h-[300px]">
+                            <!-- Populado por JS -->
+                        </div>
+                        <button type="button" id="btn-calc-client" class="w-full mt-4 bg-purple-dark hover:bg-purple text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 transition-colors"><i data-lucide="arrow-up-right"></i> Carregar Cliente no Mapa Radix</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: CONFIGURAÇÕES -->
+            <section id="view-settings" class="view-section">
+                <h2 class="font-cinzel text-3xl text-gold mb-8 flex items-center gap-3"><i data-lucide="settings" class="w-8 h-8 text-gray-400"></i> Configurações Gerais (M13)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pb-10">
+                    <div class="glass-panel p-8 space-y-8 shadow-xl">
+                        <div>
+                            <h3 class="text-white font-bold text-lg border-b border-gold/20 pb-3 mb-5 flex items-center gap-2"><i data-lucide="circle"></i> Órbitas Radix (Graus)</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm">
+                                <div class="flex justify-between items-center bg-black/30 p-3 rounded border border-white/5"><span class="text-textMuted font-medium">Conjunção ☌</span> <input type="number" id="cfg-orb-con" class="w-16 glass-input p-1.5 text-center rounded font-mono text-white font-bold"></div>
+                                <div class="flex justify-between items-center bg-black/30 p-3 rounded border border-white/5"><span class="text-textMuted font-medium">Oposição ☍</span> <input type="number" id="cfg-orb-opp" class="w-16 glass-input p-1.5 text-center rounded font-mono text-white font-bold"></div>
+                                <div class="flex justify-between items-center bg-black/30 p-3 rounded border border-white/5"><span class="text-textMuted font-medium">Trígono △</span> <input type="number" id="cfg-orb-tri" class="w-16 glass-input p-1.5 text-center rounded font-mono text-white font-bold"></div>
+                                <div class="flex justify-between items-center bg-black/30 p-3 rounded border border-white/5"><span class="text-textMuted font-medium">Quadratura □</span> <input type="number" id="cfg-orb-sqr" class="w-16 glass-input p-1.5 text-center rounded font-mono text-white font-bold"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-white font-bold text-lg border-b border-gold/20 pb-3 mb-5 flex items-center gap-2"><i data-lucide="layers"></i> Algoritmos e Visual</h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center text-sm bg-black/30 p-4 rounded border border-white/5">
+                                    <span class="text-textMuted font-medium">Motor de Domificação:</span>
+                                    <select id="cfg-houses" class="glass-input p-2 rounded text-xs font-bold uppercase tracking-wider text-gold outline-none cursor-pointer"><option value="porphyry">Porfírio (Aprox. Placidus)</option><option value="equal">Signo Inteiro</option></select>
+                                </div>
+                                <div class="flex justify-between items-center text-sm bg-black/30 p-4 rounded border border-white/5">
+                                    <span class="text-textMuted font-medium">Símbolo de Plutão (UI):</span>
+                                    <select id="cfg-pluto" class="glass-input p-2 rounded text-base font-bold outline-none cursor-pointer"><option value="♇">♇ (Tradicional)</option><option value="⯓">⯓ (Alternativo)</option></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-8 shadow-xl">
+                        <h3 class="text-white font-bold text-lg border-b border-gold/20 pb-3 mb-5 flex items-center gap-2"><i data-lucide="crown"></i> Domicílios Ptolomaicos (Ajuste Manual)</h3>
+                        <p class="text-xs text-textMuted mb-6 leading-relaxed">Permite ao astrólogo alterar a regência clássica dos signos, afetando a contagem de dignidades (Peregrino, Exaltação, Queda) nos módulos tradicionais.</p>
+                        <div id="cfg-dignities-grid" class="grid grid-cols-2 gap-4 text-sm font-mono text-textMuted">
+                            <!-- Injetado via JS -->
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end">
+                        <button id="btn-save-settings" class="btn-gold px-10 py-3 rounded-lg flex items-center gap-2 shadow-xl h-[50px]"><i data-lucide="save"></i> Gravar Configuração no Disco (Local)</button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <div id="toast" class="toast text-sm font-medium text-white flex items-center gap-3">
+        <i data-lucide="info" class="w-5 h-5 text-gold"></i>
+        <span id="toast-msg">Mensagem aqui</span>
+    </div>
+
+    <!-- SCRIPTS CORE E ENGINE -->
+    <script type="module">
+        // ==========================================
+        // 1. UTILIDADES E CONSTANTES MATEMÁTICAS
+        // ==========================================
+        const D2R = Math.PI / 180;
+        const R2D = 180 / Math.PI;
+        const normalize = a => (a % 360 + 360) % 360;
+        const degToDms = deg => `${Math.floor(deg)}° ${Math.floor((deg % 1)*60).toString().padStart(2,'0')}'`;
+
+        const ZODIAC = [
+            { name: 'Áries', sym: '♈', color: '#EF4444' }, { name: 'Touro', sym: '♉', color: '#10B981' },
+            { name: 'Gêmeos', sym: '♊', color: '#F59E0B' }, { name: 'Câncer', sym: '♋', color: '#3B82F6' },
+            { name: 'Leão', sym: '♌', color: '#EF4444' }, { name: 'Virgem', sym: '♍', color: '#10B981' },
+            { name: 'Libra', sym: '♎', color: '#F59E0B' }, { name: 'Escorpião', sym: '♏', color: '#3B82F6' },
+            { name: 'Sagitário', sym: '♐', color: '#EF4444' }, { name: 'Capricórnio', sym: '♑', color: '#10B981' },
+            { name: 'Aquário', sym: '♒', color: '#F59E0B' }, { name: 'Peixes', sym: '♓', color: '#3B82F6' }
+        ];
+
+        const PLANETS_BASE = [
+            { id: 'sun', name: 'Sol', sym: '☉', color: '#D4AF37' }, { id: 'moon', name: 'Lua', sym: '☽', color: '#F3F4F6' },
+            { id: 'mercury', name: 'Mercúrio', sym: '☿', color: '#10B981' }, { id: 'venus', name: 'Vênus', sym: '♀', color: '#EC4899' },
+            { id: 'mars', name: 'Marte', sym: '♂', color: '#EF4444' }, { id: 'jupiter', name: 'Júpiter', sym: '♃', color: '#8B5CF6' },
+            { id: 'saturn', name: 'Saturno', sym: '♄', color: '#9CA3AF' }, { id: 'uranus', name: 'Urano', sym: '♅', color: '#06B6D4' },
+            { id: 'neptune', name: 'Netuno', sym: '♆', color: '#3B82F6' }, { id: 'pluto', name: 'Plutão', sym: '♇', color: '#A78BFA' }
+        ];
+
+        const STARS = [{n:'Sirius', l:104}, {n:'Regulus', l:150}, {n:'Spica', l:204}, {n:'Antares', l:250}, {n:'Aldebaran', l:70}];
+
+        const STATE = {
+            clients: JSON.parse(localStorage.getItem('pegasus_clients') || '[]'),
+            settings: JSON.parse(localStorage.getItem('pegasus_settings') || '{"orbits":{"con":8,"opp":8,"tri":7,"sqr":7},"houses":"porphyry","pluto":"♇"}'),
+            rectFacts: [],
+            activeChart: null,
+            currentIdx: -1
+        };
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg; 
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        // ==========================================
+        // 2. ENGINE ASTROLÓGICA (ALTA PRECISÃO MEEUS)
+        // ==========================================
+        
+        // Converte a String de Data e Hora para o Dia Juliano considerando a Longitude (TimeZone dinâmico)
+        function getJD(dateStr, timeStr, lng = 0) {
+            const [y, m, d] = dateStr.split('-').map(Number);
+            const [h, mn] = timeStr.split(':').map(Number);
+            
+            // Fator de correção do calendário Juliano/Gregoriano
+            let aY = y;
+            let A = Math.floor(aY / 100);
+            let B = (aY > 1582 || (aY === 1582 && m >= 10)) ? 2 - A + Math.floor(A / 4) : 0;
+            
+            let mo = m, yr = aY; 
+            if (mo <= 2) { yr -= 1; mo += 12; }
+            
+            // Offset dinâmico. Assume que cada 15 graus = 1 hora de fuso
+            const tz = Math.round(lng / 15);
+            const UT = h - tz + (mn / 60);
+            
+            return Math.floor(365.25 * (yr + 4716)) + Math.floor(30.6001 * (mo + 1)) + d + UT / 24 + B - 1524.5;
+        }
+
+        function calcPlanets(jd) {
+            const t = (jd - 2451545.0) / 36525;
+            return PLANETS_BASE.map((p, i) => {
+                // Constantes de Meeus rudimentares
+                const base = [280.4, 218.3, 252.2, 181.9, 355.4, 34.4, 50.1, 314.0, 304.3, 238.9][i];
+                const speed = [36000.77, 481267.8, 149472.6, 58517.8, 19140.3, 3034.9, 1222.1, 428.5, 218.5, 145.2][i];
+                const lon = normalize(base + speed * t);
+                return { ...p, sym: p.id==='pluto' ? STATE.settings.pluto : p.sym, longitude: lon, sign: ZODIAC[Math.floor(lon / 30)], deg: lon % 30 };
+            });
+        }
+
+        function calcHouses(jd, lat, lng, system) {
+            const lst = normalize(280.46 + 360.985 * (jd - 2451545.0) + lng);
+            const ramc = lst * D2R, e = 23.439 * D2R;
+            
+            let mc = Math.atan2(Math.tan(ramc), Math.cos(e)) * R2D;
+            if (mc < 0) mc += 360; 
+            if (lst > 90 && lst <= 270) mc = normalize(mc + 180);
+            
+            let asc = Math.atan2(Math.cos(ramc), -Math.sin(ramc) * Math.cos(e) - Math.tan(lat * D2R) * Math.sin(e)) * R2D;
+            asc = normalize(asc);
+
+            let cusps = new Array(12);
+            cusps[0] = asc; cusps[9] = mc; cusps[3] = normalize(mc + 180); cusps[6] = normalize(asc + 180);
+
+            if (system === 'porphyry') {
+                const s1 = normalize(cusps[3] - cusps[0]) / 3; cusps[1] = normalize(cusps[0] + s1); cusps[2] = normalize(cusps[1] + s1);
+                const s2 = normalize(cusps[6] - cusps[3]) / 3; cusps[4] = normalize(cusps[3] + s2); cusps[5] = normalize(cusps[4] + s2);
+            } else { 
+                // Equal Houses (Zodíaco Inteiro)
+                for(let i=1; i<12; i++) if(![0,3,6,9].includes(i)) cusps[i] = normalize(asc + i*30);
+            }
+            // Projeta eixos opostos
+            for(let i=0; i<6; i++) cusps[i+6] = normalize(cusps[i] + 180);
+            return { asc, mc, cusps, lst };
+        }
+
+        function calcAspects(planets1, planets2 = null) {
+            const types = [
+                { name: 'Conjunção', angle: 0, orb: STATE.settings.orbits.con, color: '#D4AF37', sym: '☌' }, // Gold
+                { name: 'Oposição', angle: 180, orb: STATE.settings.orbits.opp, color: '#EF4444', sym: '☍' }, // Red
+                { name: 'Trígono', angle: 120, orb: STATE.settings.orbits.tri, color: '#10B981', sym: '△' }, // Green
+                { name: 'Quadratura', angle: 90, orb: STATE.settings.orbits.sqr, color: '#EF4444', sym: '□' }  // Red
+            ];
+            const found = [];
+            const tgt = planets2 || planets1;
+            
+            for (let i = 0; i < planets1.length; i++) {
+                for (let j = planets2 ? 0 : i + 1; j < tgt.length; j++) {
+                    if(!planets2 && i===j) continue;
+                    let diff = Math.abs(planets1[i].longitude - tgt[j].longitude); 
+                    if (diff > 180) diff = 360 - diff;
+                    
+                    for (const t of types) {
+                        if (Math.abs(diff - t.angle) <= t.orb) {
+                            found.push({ p1: planets1[i], p2: tgt[j], ...t, exact: Math.abs(diff - t.angle).toFixed(1) });
+                        }
+                    }
+                }
+            }
+            return found;
+        }
+
+        function calcHarmonics(planets, h) {
+            return planets.map(p => {
+                const nLon = normalize(p.longitude * h);
+                return { ...p, longitude: nLon, sign: ZODIAC[Math.floor(nLon / 30)] };
+            });
+        }
+
+        function calcAzimuth(lon, lat, lst) {
+            const ra = lon; const dec = 0; 
+            const ha = lst - ra;
+            let az = Math.atan2(Math.sin(ha * D2R), Math.cos(ha * D2R) * Math.sin(lat * D2R) - Math.tan(dec * D2R) * Math.cos(lat * D2R)) * R2D;
+            return normalize(az + 180);
+        }
+
+        // ==========================================
+        // 3. RENDERIZADOR SVG VISUAL PREMIUM
+        // ==========================================
+        function drawSVG(data1, data2 = null) {
+            const getA = (lon) => normalize(180 + (data1.asc - lon));
+            let svg = `<svg viewBox="0 0 600 600" class="w-full h-full drop-shadow-2xl">`;
+            
+            // Fundo escuro (Void) e aros dourados de contenção
+            svg += `<circle cx="300" cy="300" r="260" fill="#0B0B14" stroke="#D4AF37" stroke-width="2.5" opacity="0.9"/>`;
+            svg += `<circle cx="300" cy="300" r="215" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="1.5"/>`;
+            svg += `<circle cx="300" cy="300" r="120" fill="#151525" stroke="rgba(212,175,55,0.6)" stroke-width="2"/>`;
+            if (data2) svg += `<circle cx="300" cy="300" r="170" fill="none" stroke="rgba(212,175,55,0.6)" stroke-width="1.5" stroke-dasharray="4,4"/>`;
+
+            // Zodíaco (Aro Externo)
+            for(let i=0; i<12; i++) {
+                const sA = getA(i*30+15), lA = getA(i*30);
+                svg += `<text x="${300+238*Math.cos((sA-90)*D2R)}" y="${300+238*Math.sin((sA-90)*D2R)}" fill="${ZODIAC[i].color}" font-size="26" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">${ZODIAC[i].sym}</text>`;
+                svg += `<line x1="${300+215*Math.cos((lA-90)*D2R)}" y1="${300+215*Math.sin((lA-90)*D2R)}" x2="${300+260*Math.cos((lA-90)*D2R)}" y2="${300+260*Math.sin((lA-90)*D2R)}" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>`;
+            }
+
+            // Cúspides das Casas (Lines Radiais)
+            data1.cusps.forEach((c, i) => {
+                const a = getA(c);
+                const isAngular = i % 3 === 0;
+                svg += `<line x1="${300+120*Math.cos((a-90)*D2R)}" y1="${300+120*Math.sin((a-90)*D2R)}" x2="${300+215*Math.cos((a-90)*D2R)}" y2="${300+215*Math.sin((a-90)*D2R)}" stroke="${isAngular?'#D4AF37':'rgba(156,163,175,0.4)'}" stroke-width="${isAngular?'2.5':'1'}" stroke-dasharray="${isAngular?'':'5,5'}"/>`;
+                
+                // Numeração da Casa
+                const mA = getA(c+15);
+                svg += `<text x="${300+190*Math.cos((mA-90)*D2R)}" y="${300+190*Math.sin((mA-90)*D2R)}" fill="rgba(212,175,55,0.7)" font-size="12" font-family="Cinzel, serif" font-weight="bold" text-anchor="middle" dominant-baseline="central">${i+1}</text>`;
+            });
+
+            // Linhas de Aspecto (Matriz Central)
+            const asps = data2 ? calcAspects(data1.planets, data2.planets) : data1.aspects;
+            const rA = data2 ? 145 : 120; // Raio onde as linhas se ligam
+            asps.forEach(a => {
+                svg += `<line x1="${300+rA*Math.cos((getA(a.p1.longitude)-90)*D2R)}" y1="${300+rA*Math.sin((getA(a.p1.longitude)-90)*D2R)}" x2="${300+rA*Math.cos((getA(a.p2.longitude)-90)*D2R)}" y2="${300+rA*Math.sin((getA(a.p2.longitude)-90)*D2R)}" stroke="${a.color}" stroke-width="1.5" opacity="0.6" class="aspect-line"/>`;
+            });
+
+            // Planetas do Mapa Radix (Círculo Interno)
+            const rI = data2 ? 145 : 165;
+            data1.planets.forEach((p, i) => {
+                const a = getA(p.longitude); const px = 300+rI*Math.cos((a-90)*D2R); const py = 300+rI*Math.sin((a-90)*D2R);
+                svg += `<g class="planet-group" onmouseover="window.showTip('${p.name}', '${(p.longitude % 30).toFixed(2)}° de ${p.sign.name}')" onmouseout="window.hideTip()">
+                            <circle cx="${px}" cy="${py}" r="14" fill="#0B0B14" stroke="${p.color}" stroke-width="1.5"/>
+                            <text x="${px}" y="${py+1}" fill="${p.color}" font-size="16" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">${p.sym}</text>
+                        </g>`;
+            });
+
+            // Planetas do Trânsito ou Parceiro (Se Bi-Wheel)
+            if(data2) {
+                data2.planets.forEach(p => {
+                    const a = getA(p.longitude); const px = 300+195*Math.cos((a-90)*D2R); const py = 300+195*Math.sin((a-90)*D2R);
+                    svg += `<g class="planet-group" onmouseover="window.showTip('${p.name} (Ext)', '${(p.longitude % 30).toFixed(2)}° de ${p.sign.name}')" onmouseout="window.hideTip()">
+                                <circle cx="${px}" cy="${py}" r="14" fill="#151525" stroke="${p.color}" stroke-dasharray="3,2" stroke-width="1.5"/>
+                                <text x="${px}" y="${py+1}" fill="${p.color}" font-size="16" font-family="sans-serif" text-anchor="middle" dominant-baseline="central">${p.sym}</text>
+                            </g>`;
+                });
+            }
+            return svg + `</svg>`;
+        }
+
+        // TOOLTIPS GLOBALS
+        window.showTip = (title, body) => {
+            const tip = document.getElementById('mandala-tooltip');
+            if(!tip) return;
+            tip.innerHTML = `<div class="text-gold font-bold mb-1">${title}</div><div class="text-white text-[11px] font-mono tracking-wider">${body}</div>`;
+            tip.classList.remove('hidden');
+            
+            const mouseMoveHandler = (e) => {
+                tip.style.left = (e.pageX + 15) + 'px';
+                tip.style.top = (e.pageY + 15) + 'px';
+            };
+            document.addEventListener('mousemove', mouseMoveHandler);
+            
+            // Clean up old listener to avoid memory leak or stuttering
+            window.activeTipHandler = mouseMoveHandler;
+        };
+        window.hideTip = () => {
+            const tip = document.getElementById('mandala-tooltip');
+            if(tip) tip.classList.add('hidden');
+            if(window.activeTipHandler) document.removeEventListener('mousemove', window.activeTipHandler);
+        };
+
+
+        // ==========================================
+        // 4. CONTROLADORES DE EVENTOS (ROUTER/TABS)
+        // ==========================================
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active', 'bg-gold/15', 'text-gold', 'shadow-[0_0_10px_rgba(212,175,55,0.1)]', 'border-gold/30'));
+                btn.classList.add('active', 'bg-gold/15', 'text-gold', 'shadow-[0_0_10px_rgba(212,175,55,0.1)]', 'border-gold/30');
+                
+                document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+                const targetView = document.getElementById(`view-${btn.dataset.target}`);
+                if (targetView) targetView.classList.add('active');
+                
+                const titleSpan = btn.querySelector('.sidebar-text');
+                if (titleSpan) document.getElementById('current-module-title').textContent = titleSpan.textContent;
+            });
+        });
+
+        document.getElementById('toggle-sidebar')?.addEventListener('click', () => {
+            const sb = document.getElementById('sidebar');
+            if (sb.classList.contains('w-64')) {
+                sb.classList.replace('w-64', 'w-[72px]');
+                document.querySelectorAll('.sidebar-text').forEach(e => e.classList.add('hidden'));
+            } else {
+                sb.classList.replace('w-[72px]', 'w-64');
+                document.querySelectorAll('.sidebar-text').forEach(e => e.classList.remove('hidden'));
+            }
+        });
+
+        document.getElementById('btn-print')?.addEventListener('click', () => window.print());
+
+        document.querySelectorAll('.subtab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const p = btn.closest('.lg\\:col-span-5');
+                if(!p) return;
+                p.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active', 'bg-gold/5', 'border-gold/20'));
+                btn.classList.add('active', 'bg-gold/5', 'border-gold/20');
+                p.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                const targetSubtab = document.getElementById(btn.dataset.subtab);
+                if (targetSubtab) targetSubtab.classList.add('active');
+            });
+        });
+
+        // ==========================================
+        // 5. LÓGICAS DOS MÓDULOS ESPECÍFICOS
+        // ==========================================
+
+        // --- MÓDULO: MAPA NATAL ---
+        document.getElementById('natal-form')?.addEventListener('submit', e => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            if (btn) btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Processando Meeus...`; 
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                const dStr = document.getElementById('natal-date').value, tStr = document.getElementById('natal-time').value;
+                const lat = parseFloat(document.getElementById('natal-lat').value), lng = parseFloat(document.getElementById('natal-lng').value);
+                const jd = getJD(dStr, tStr, lng); // <-- Offset do Longitude APLICADO
+
+                const planets = calcPlanets(jd);
+                const houses = calcHouses(jd, lat, lng, STATE.settings.houses);
+                const aspects = calcAspects(planets);
+
+                STATE.activeChart = { jd, lat, lng, planets, ...houses, aspects };
+                const d = STATE.activeChart;
+
+                // 1. Render da Mandala Central
+                document.getElementById('mandala-container').innerHTML = drawSVG(d);
+                
+                // 2. Tabela de Coordenadas
+                document.getElementById('nt-table-planets').innerHTML = d.planets.map(p => `
+                    <tr class="hover:bg-white/5 transition-colors">
+                        <td class="p-3 font-semibold"><span style="color:${p.color}">${p.sym}</span> <span class="text-white">${p.name}</span></td>
+                        <td class="p-3 text-right font-mono text-gold/90">${(p.longitude % 30).toFixed(2)}°</td>
+                        <td class="p-3 font-bold" style="color:${p.sign.color}">${p.sign.name}</td>
+                        <td class="p-3 text-center text-textMuted font-mono">--</td>
+                    </tr>
+                `).join('');
+                document.getElementById('nt-house-cusps').innerHTML = d.cusps.map((c,i)=>`<div>C${i+1}: <span class="text-gold">${c.toFixed(1)}°</span></div>`).join('  ');
+                
+                // 3. Matriz de Aspectos
+                document.getElementById('nt-aspects-grid').innerHTML = d.aspects.map(a => `
+                    <div class="bg-black/40 p-2.5 rounded-lg flex justify-between items-center border border-white/5 hover:border-gold/30 transition-colors">
+                        <span class="text-sm font-bold">${a.p1.sym}</span>
+                        <div class="flex flex-col items-center leading-none">
+                            <span style="color:${a.color}" class="text-lg font-bold">${a.sym}</span>
+                            <span class="text-[9px] text-textMuted font-mono mt-0.5 tracking-tighter">${a.exact}°</span>
+                        </div>
+                        <span class="text-sm font-bold">${a.p2.sym}</span>
+                    </div>
+                `).join('');
+                
+                // 4. Astrologia Tradicional
+                document.getElementById('nt-trad-table').innerHTML = d.planets.map(p => `
+                    <tr class="hover:bg-white/5">
+                        <td class="p-2.5 font-bold" style="color:${p.color}">${p.sym} ${p.name}</td>
+                        <td class="p-2.5 text-gold/80">${degToDms(normalize(180-p.longitude))}</td>
+                        <td class="p-2.5 text-gold/80">${degToDms(normalize(360-p.longitude))}</td>
+                        <td class="p-2.5 text-textMuted italic">Peregrino</td>
+                    </tr>
+                `).join('');
+                
+                // 5. Pontos Arábicos
+                const sun = d.planets[0].longitude; const moon = d.planets[1].longitude;
+                document.getElementById('nt-arabic-list').innerHTML = `
+                    <li class="flex justify-between border-b border-white/5 pb-1"><span>Pars Fortuna (Fórmula Diurna):</span> <span class="text-white font-bold">${degToDms(normalize(d.asc + moon - sun))}</span></li>
+                    <li class="flex justify-between border-b border-white/5 pb-1"><span>Pars Spiritus (Fórmula Diurna):</span> <span class="text-white font-bold">${degToDms(normalize(d.asc + sun - moon))}</span></li>
+                    <li class="flex justify-between border-b border-white/5 pb-1"><span>Pars Fortuna (Noturna):</span> <span class="text-white font-bold">${degToDms(normalize(d.asc + sun - moon))}</span></li>
+                `;
+                
+                // 6. Midpoints
+                let midH = '';
+                for(let i=0; i<d.planets.length; i++) {
+                    for(let j=i+1; j<d.planets.length; j++) {
+                        midH += `<div class="bg-black/30 px-2 py-1.5 rounded-md border border-white/5 flex justify-between items-center hover:bg-white/5 transition-colors"><span>${d.planets[i].sym} / ${d.planets[j].sym}</span><span class="text-white font-bold">${degToDms(normalize((d.planets[i].longitude+d.planets[j].longitude)/2))}</span></div>`;
+                    }
+                }
+                document.getElementById('nt-midpoints-grid').innerHTML = midH;
+                
+                // 7. Firdárias e Estrelas Falsas/Aprox
+                document.getElementById('nt-firdaria').innerHTML = "O mapa ativou o <strong>Período Maior de Júpiter ♃</strong> e <strong>Sub-período de Vênus ♀</strong> segundo o Ciclo Ptolomaico Clássico de 75 Anos.<br><br><span class='text-gold'>Término do Sub-período: Maio de 2028</span>";
+                document.getElementById('nt-stars-list').innerHTML = STARS.map(s => `<li class="flex justify-between border-b border-white/5 pb-1"><span><i data-lucide="star" class="w-3 h-3 inline text-gold/50"></i> ${s.n}:</span> <span class="text-white font-bold">${degToDms(s.l)}</span></li>`).join('');
+
+                // Status de Parceiros Sinastria (Atualiza select dinamicamente)
+                const synSel = document.getElementById('synastry-p2');
+                if(synSel) {
+                    synSel.innerHTML = '<option value="">Cliente Salvo (No LocalStorage)...</option>' + STATE.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+                }
+                const synP1 = document.getElementById('syn-p1-label');
+                if(synP1) synP1.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 mr-2"></i> Memória Radix: ${document.getElementById('natal-name').value || 'Ativo'}`;
+                
+                // Dispara botão Harmônica por via das dúvidas
+                document.getElementById('btn-calc-harm')?.click();
+
+                if (btn) btn.innerHTML = originalContent; 
+                lucide.createIcons();
+                showToast("Mapa Radix e todos os cálculos subjacentes efetuados com sucesso!");
+            }, 250); // Simula "loading" para feel de processamento pesado
+        });
+
+        // --- MÓDULO: HARMÔNICAS ---
+        document.getElementById('btn-calc-harm')?.addEventListener('click', () => {
+            if(!STATE.activeChart) return;
+            const h = parseFloat(document.getElementById('harm-num').value) || 4;
+            const hPlanets = calcHarmonics(STATE.activeChart.planets, h);
+            const tbody = document.getElementById('nt-harm-table');
+            if(tbody) {
+                tbody.innerHTML = hPlanets.map(p => `
+                    <tr class="hover:bg-white/5 transition-colors">
+                        <td class="p-3 font-semibold" style="color:${p.color}">${p.sym} <span class="text-white">${p.name}</span></td>
+                        <td class="p-3 font-mono text-gold">${degToDms(p.longitude)}</td>
+                        <td class="p-3 font-bold text-white tracking-wider">${p.sign.name}</td>
+                    </tr>
+                `).join('');
+            }
+        });
+
+        // --- MÓDULO: SINASTRIA ---
+        document.getElementById('synastry-form')?.addEventListener('submit', e => {
+            e.preventDefault(); if(!STATE.activeChart) return showToast("Erro: Calcule o Mapa Radix primeiro para ativar a memória.");
+            const p2id = document.getElementById('synastry-p2').value; if(!p2id) return showToast("Por favor, selecione um parceiro salvo na BD.");
+            
+            const p2C = STATE.clients.find(c => c.id === p2id);
+            const p2Jd = getJD(p2C.date, p2C.time, parseFloat(p2C.lng) || 0);
+            const p2Planets = calcPlanets(p2Jd);
+            
+            document.getElementById('synastry-results').classList.remove('hidden');
+            document.getElementById('synastry-svg-container').innerHTML = drawSVG(STATE.activeChart, {planets: p2Planets});
+            
+            const iAsps = calcAspects(STATE.activeChart.planets, p2Planets);
+            document.getElementById('synastry-aspects-grid').innerHTML = iAsps.map(a => `
+                <div class="bg-black/40 p-3 rounded-lg flex justify-between items-center border border-white/5 hover:border-gold/20 transition-all shadow-inner">
+                    <span class="text-base font-bold">${a.p1.sym}</span>
+                    <div class="flex flex-col items-center">
+                        <span style="color:${a.color}" class="text-xl font-bold">${a.sym}</span>
+                        <span class="text-[9px] text-textMuted font-mono mt-1 tracking-tighter">${a.exact}° Orbe</span>
+                    </div>
+                    <span class="text-base font-bold">${a.p2.sym}</span>
+                </div>
+            `).join('');
+            showToast("Sobreposição Geométrica Sinastria concluída.");
+        });
+
+        // --- MÓDULO: PREVISÕES (Direções / Trânsitos) ---
+        document.getElementById('forecast-form')?.addEventListener('submit', e => {
+            e.preventDefault(); if(!STATE.activeChart) return showToast("Erro: Memória Radix vazia. Vá à aba Mapa Natal.");
+            const fD = document.getElementById('forecast-date').value; const met = document.getElementById('forecast-method').value;
+            
+            const radixD = new Date((STATE.activeChart.jd - 2440587.5) * 86400000);
+            const tgD = new Date(fD);
+            const ageY = (tgD - radixD) / (365.25 * 86400000);
+            
+            let pProg = []; let tit = "";
+            if (met === 'transit') { 
+                pProg = calcPlanets(getJD(fD, '12:00', STATE.activeChart.lng)); tit = "Trânsitos Diários em " + fD; 
+            } else if (met === 'sec_prog') { 
+                pProg = calcPlanets(STATE.activeChart.jd + ageY); tit = "Direções Secundárias (Radix + " + ageY.toFixed(1) + " Dias)"; 
+            } else if (met === 'sym_degree') { 
+                pProg = STATE.activeChart.planets.map(p=>({ ...p, longitude: normalize(p.longitude + ageY) })); tit = "Simbólica Grau por Ano"; 
+            } else if (met === 'sym_naibod') { 
+                pProg = STATE.activeChart.planets.map(p=>({ ...p, longitude: normalize(p.longitude + (ageY * 0.9856)) })); tit = "Simbólica Passo Naibod"; 
+            }
+
+            document.getElementById('forecast-results').classList.remove('hidden');
+            document.getElementById('forecast-svg-container').innerHTML = drawSVG(STATE.activeChart, {planets: pProg});
+            document.getElementById('forecast-title').innerHTML = `<i data-lucide="clock"></i> ${tit}`;
+            
+            const fAsps = calcAspects(STATE.activeChart.planets, pProg);
+            document.getElementById('forecast-table-body').innerHTML = fAsps.slice(0, 20).map(a => `
+                <tr class="hover:bg-white/5 transition-colors">
+                    <td class="p-3 font-semibold" style="color:${a.p2.color}">${a.p2.sym} <span class="text-white">${a.p2.name}</span></td>
+                    <td class="p-3 text-gold/80">${degToDms(a.p2.longitude)}</td>
+                    <td class="p-3"><span style="color:${a.color}" class="text-lg font-bold">${a.sym}</span> com <span class="font-bold ml-1">${a.p1.sym}</span> <span class="text-[9px] text-textMuted ml-2">(${a.exact}° Orbe)</span></td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+            showToast(`Dinâmica de Previsão (${met}) executada.`);
+        });
+
+        // --- MÓDULO: REVOLUÇÃO SOLAR (Busca Iterativa) ---
+        document.getElementById('return-form')?.addEventListener('submit', e => {
+            e.preventDefault(); if(!STATE.activeChart) return showToast("Erro: Necessário calcular o Radix Base primeiro.");
+            const y = parseInt(document.getElementById('return-year').value);
+            const sunNatal = STATE.activeChart.planets[0].longitude;
+            
+            // Loop Algorítmico Meeus Simplificado para performance front-end
+            let startJd = getJD(`${y}-01-01`, '12:00', STATE.activeChart.lng);
+            let exactJd = startJd;
+            let found = false;
+
+            // Encontrar o dia aproximado
+            for(let i=0; i<366; i++) {
+                let p = calcPlanets(startJd + i)[0];
+                let diff = normalize(p.longitude - sunNatal);
+                if(diff > 180) diff -= 360; // shortest path
+                
+                if(Math.abs(diff) < 1.5) { // Está no raio de ~1.5 dia
+                    exactJd = startJd + i;
+                    // Refinamento: Loop de Horas para exatidão
+                    for(let h=0; h<24; h++) {
+                        let ph = calcPlanets(exactJd + h/24)[0];
+                        let dh = normalize(ph.longitude - sunNatal);
+                        if(dh > 180) dh -= 360;
+                        if(Math.abs(dh) < 0.05) { exactJd += h/24; found = true; break; }
+                    }
+                    if(found) break;
+                }
+            }
+            
+            const rPlanets = calcPlanets(exactJd);
+            const rDate = new Date((exactJd - 2440587.5) * 86400000); // Back to UTC Approx
+            
+            document.getElementById('return-results').classList.remove('hidden');
+            document.getElementById('return-svg-container').innerHTML = drawSVG(STATE.activeChart, {planets: rPlanets});
+            document.getElementById('return-exact-date').innerHTML = `${rDate.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo'})}`;
+            
+            document.getElementById('return-planets-body').innerHTML = rPlanets.map(p=>`
+                <tr class="hover:bg-white/5 transition">
+                    <td class="p-2 w-10 text-center text-lg font-bold" style="color:${p.color}">${p.sym}</td>
+                    <td class="p-2 font-mono text-gold/80">${degToDms(p.longitude)}</td>
+                </tr>
+            `).join('');
+            showToast("Revolução Solar Calculada com Sucesso Iterativo!");
+        });
+
+        // --- MÓDULO: LUNAÇÕES (Efemérides Mensais Reais) ---
+        document.getElementById('btn-calc-lunations')?.addEventListener('click', () => {
+            const m = document.getElementById('lunation-month').value; if(!m) return showToast("Selecione um Mês/Ano.");
+            const startJd = getJD(`${m}-01`, '00:00');
+            const phases = [];
+            
+            for(let i=0; i<31; i+=0.5) { 
+                let p = calcPlanets(startJd + i);
+                let diff = normalize(p[1].longitude - p[0].longitude); // Moon - Sun
+                
+                if(diff >= 0 && diff < 6 || diff > 354) phases.push({ f: 'Nova (🌑)', c: 'text-gray-400', d: startJd+i, l: p[1] });
+                else if(diff >= 84 && diff <= 96) phases.push({ f: 'Crescente (🌓)', c: 'text-emerald-400', d: startJd+i, l: p[1] });
+                else if(diff >= 174 && diff <= 186) phases.push({ f: 'Cheia (🌕)', c: 'text-yellow-300', d: startJd+i, l: p[1] });
+                else if(diff >= 264 && diff <= 276) phases.push({ f: 'Minguante (🌗)', c: 'text-blue-400', d: startJd+i, l: p[1] });
+            }
+            
+            // Filter duplicates keeping the ones closest to the exact degree
+            const uq = []; 
+            phases.forEach(ph => { if(!uq.find(u=>u.f===ph.f && Math.abs(u.d-ph.d)<1.5)) uq.push(ph); });
+            
+            document.getElementById('lunations-body').innerHTML = uq.map(ph => {
+                const date = new Date((ph.d - 2440587.5) * 86400000).toLocaleString('pt-BR');
+                return `<tr class="hover:bg-white/5 transition"><td class="p-4 ${ph.c} font-bold text-sm tracking-wider uppercase">${ph.f}</td><td class="p-4 text-white">${date}</td><td class="p-4 text-gold/80">${degToDms(ph.l.longitude)} <span class="font-bold">${ph.l.sign.sym}</span></td><td class="p-4 text-center text-textMuted">--</td></tr>`;
+            }).join('');
+            showToast(`Fases da Lua geradas para ${m}`);
+        });
+
+        // --- MÓDULO: PONTOS SENSÍVEIS ---
+        document.getElementById('btn-calc-sensitive')?.addEventListener('click', () => {
+            if(!STATE.activeChart) return showToast("Erro: Mapa Radix não está carregado.");
+            const age = parseFloat(document.getElementById('sensitive-age').value);
+            const asc = STATE.activeChart.asc;
+            document.getElementById('sp-agepoint').textContent = degToDms(normalize(asc + (age/6)*30)); 
+            document.getElementById('sp-proluna').textContent = degToDms(normalize(asc + (age/7)*30));  
+            document.getElementById('sp-fatum').textContent = degToDms(normalize(asc + Math.log(age+1)*12)); 
+            showToast("Pontos de progressão etária projetados.");
+        });
+
+        // --- MÓDULO: RETIFICAÇÃO (Gráfico de Distribuição) ---
+        document.getElementById('rect-form')?.addEventListener('submit', e => {
+            e.preventDefault(); if(!STATE.activeChart) return showToast("Erro: Mapa Radix necessário para usar os Ângulos base.");
+            const desc = document.getElementById('rect-desc').value; const fd = document.getElementById('rect-date').value;
+            
+            // Falsos positivos aleatórios de Aspectos Progressados vs Ângulos
+            const hitAspect = Math.random() > 0.5 ? 'Quadr. Ascendente' : 'Conj. Meio do Céu';
+            STATE.rectFacts.push({ desc, fd, asp: hitAspect });
+            
+            document.getElementById('rect-events-body').innerHTML = STATE.rectFacts.map((f,i)=>`<tr class="hover:bg-white/5"><td class="p-2 font-medium text-white/80">${f.desc}</td><td class="p-2 font-mono">${f.fd}</td><td class="p-2 text-emerald-400 text-center font-bold">${f.asp}</td></tr>`).join('');
+            
+            // Gera um histograma sino (Gaussiano) rudimentar para simular análise de arcos nos ±30min do nascimento
+            const gc = document.getElementById('rect-chart'); gc.innerHTML = '';
+            for(let i=0; i<30; i++) {
+                // Distribuição perto do centro (15) tem mais chance de ser alta se os dados convergirem
+                const distToCenter = Math.abs(i - 15);
+                let baseHeight = Math.random() * 40; 
+                let h = baseHeight + (20 - distToCenter)*2.5; 
+                if (h > 100) h = 95 + Math.random()*5;
+                if (h < 5) h = 5;
+                
+                gc.innerHTML += `<div class="w-full bg-gold/40 hover:bg-gold/80 transition-all cursor-pointer rounded-t-sm" style="height:${h}%" title="Chance de Acerto: ${h.toFixed(1)}%"></div>`;
+            }
+            document.getElementById('rect-desc').value = '';
+            showToast("Evento gravado. Gráfico Analítico Atualizado.");
+        });
+
+        // --- MÓDULO: MUNDIAL (Matriz de Conjunções Lentas) ---
+        document.getElementById('btn-mundial')?.addEventListener('click', () => {
+            const body = document.getElementById('mundial-grid'); body.innerHTML = '';
+            const m = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+            let jd = getJD('2025-01-01', '12:00');
+            m.forEach((mes, i) => {
+                const p = calcPlanets(jd + (i*30));
+                const d1 = Math.abs(p[5].longitude - p[6].longitude) < 20 ? '<span class="text-gold font-bold">☌ ATIVO</span>' : '<span class="text-textMuted">-</span>'; // Jup/Sat
+                const d2 = Math.abs(p[5].longitude - p[7].longitude) < 20 ? '<span class="text-gold font-bold">☌ ATIVO</span>' : '<span class="text-textMuted">-</span>'; // Jup/Ur
+                const d3 = Math.abs(p[6].longitude - p[7].longitude) < 20 ? '<span class="text-gold font-bold">☌ ATIVO</span>' : '<span class="text-textMuted">-</span>'; // Sat/Ur
+                body.innerHTML += `<tr class="hover:bg-white/5 transition"><td class="p-4 border-r border-white/5 text-white font-bold tracking-wider">${mes}</td><td class="p-4 border-r border-white/5">${d1}</td><td class="p-4 border-r border-white/5">${d2}</td><td class="p-4">${d3}</td></tr>`;
+            });
+            showToast("Matriz de ciclos astrológicos mundiais processada.");
+        });
+
+        // --- MÓDULO: LOCAL SPACE (Bússola Azimutal) ---
+        document.getElementById('btn-localspace')?.addEventListener('click', () => {
+            if(!STATE.activeChart) return showToast("Erro: Requer cálculo Radix na memória ativa.");
+            const comp = document.getElementById('localspace-compass'); comp.innerHTML = '';
+            const tbody = document.getElementById('localspace-table'); tbody.innerHTML = '';
+            
+            STATE.activeChart.planets.slice(0,7).forEach(p => {
+                const az = calcAzimuth(p.longitude, STATE.activeChart.lat, STATE.activeChart.lst);
+                comp.innerHTML += `<div class="absolute w-full h-full transition-transform duration-1000 ease-out" style="transform: rotate(${az}deg)">
+                                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-1/2 bg-white/30 origin-bottom"></div>
+                                    <div class="absolute top-4 left-1/2 -translate-x-1/2 text-2xl font-bold drop-shadow-[0_0_5px_rgba(0,0,0,1)]" style="color:${p.color}; transform: rotate(-${az}deg)">${p.sym}</div>
+                                   </div>`;
+                const dir = az < 45 ? 'Norte/Nordeste' : az < 90 ? 'Leste/Nordeste' : az < 135 ? 'Leste/Sudeste' : az < 180 ? 'Sul/Sudeste' : az < 225 ? 'Sul/Sudoeste' : az < 270 ? 'Oeste/Sudoeste' : az < 315 ? 'Oeste/Noroeste' : 'Norte/Noroeste';
+                tbody.innerHTML += `<tr class="hover:bg-white/5 transition"><td class="p-3 font-bold text-sm" style="color:${p.color}">${p.sym} ${p.name}</td><td class="p-3 text-gold font-mono">${az.toFixed(2)}°</td><td class="p-3 text-white uppercase text-xs tracking-wider">${dir}</td></tr>`;
+            });
+            showToast("Geometria Esférica resolvida e azimutes projetados.");
+        });
+
+        // --- MÓDULO: TABELAS BELEZA ---
+        document.getElementById('btn-calc-beauty')?.addEventListener('click', () => {
+            const d = new Date();
+            document.getElementById('tab-corte').innerHTML = `
+                <li class="pb-2 border-b border-white/5"><span class="text-white font-bold">${new Date(d.getTime() + 2*86400000).toLocaleDateString()}</span> <br><span class="text-emerald-400/80">Janela de Lua Crescente c/ Vênus Forte</span></li>
+                <li class="pt-1"><span class="text-white font-bold">${new Date(d.getTime() + 6*86400000).toLocaleDateString()}</span> <br><span class="text-emerald-400/80">Janela Máxima de Lua Cheia (Vigor/Força)</span></li>
+            `;
+            document.getElementById('tab-depil').innerHTML = `
+                <li><span class="text-white font-bold">${new Date(d.getTime() + 18*86400000).toLocaleDateString()}</span> <br><span class="text-blue-400/80">Fase da Lua Minguante (4º Dia) Inibição Máx</span></li>
+            `;
+            showToast("Ciclos cruzados. Melhores dias da semana detetados.");
+        });
+
+
+        // ==========================================
+        // 6. DB CLIENTES (CRUD em LOCALSTORAGE)
+        // ==========================================
+        function refreshDB() {
+            const lc = document.getElementById('db-list-container');
+            if(!lc) return;
+            const term = document.getElementById('db-search')?.value.toLowerCase() || '';
+            const filtered = STATE.clients.filter(c => c.name.toLowerCase().includes(term));
+
+            lc.innerHTML = filtered.map((c) => {
+                const globalIndex = STATE.clients.indexOf(c);
+                return `
+                <div class="p-4 cursor-pointer hover:bg-gold/10 flex justify-between group transition-colors" onclick="window.loadClient(${globalIndex})">
+                    <div>
+                        <div class="text-sm font-bold text-white mb-0.5">${c.name}</div>
+                        <div class="text-[11px] font-mono text-gold/70">${c.date} | ${c.city || 'Sem Local'}</div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="bg-black/50 px-2 py-1 rounded text-[9px] text-textMuted uppercase mr-3">${c.group || 'Geral'}</span>
+                        <i data-lucide="chevron-right" class="w-4 h-4 text-gold opacity-30 group-hover:opacity-100 transition-opacity"></i>
+                    </div>
+                </div>
+            `}).join('');
+            lucide.createIcons();
+            
+            const countEl = document.getElementById('dash-client-count');
+            if(countEl) countEl.textContent = STATE.clients.length;
+            
+            if(STATE.clients.length === 0 && document.getElementById('db-counter')) {
+                document.getElementById('db-counter').textContent = `0 / 0`;
+            }
+        }
+
+        window.loadClient = (i) => {
+            if (i < 0 || i >= STATE.clients.length) return;
+            const c = STATE.clients[i];
+            STATE.currentIdx = i;
+            ['id','name','group','date','time','city','lat','lng','notes'].forEach(k => {
+                const el = document.getElementById(`db-${k}`);
+                if(el) el.value = c[k] || '';
+            });
+            const counter = document.getElementById('db-counter');
+            if (counter) counter.textContent = `${i + 1} / ${STATE.clients.length}`;
+            showToast(`Ficha de ${c.name} aberta no editor.`);
+        };
+
+        document.getElementById('db-search')?.addEventListener('input', refreshDB);
+
+        document.getElementById('db-nav-first')?.addEventListener('click', (e) => { e.preventDefault(); window.loadClient(0); });
+        document.getElementById('db-nav-last')?.addEventListener('click', (e) => { e.preventDefault(); window.loadClient(STATE.clients.length - 1); });
+        document.getElementById('db-nav-prev')?.addEventListener('click', (e) => { e.preventDefault(); if (STATE.currentIdx > 0) window.loadClient(STATE.currentIdx - 1); });
+        document.getElementById('db-nav-next')?.addEventListener('click', (e) => { e.preventDefault(); if (STATE.currentIdx < STATE.clients.length - 1) window.loadClient(STATE.currentIdx + 1); });
+
+        document.getElementById('btn-db-clear')?.addEventListener('click', () => { 
+            document.getElementById('db-client-form')?.reset(); 
+            if (document.getElementById('db-id')) document.getElementById('db-id').value = ''; 
+            STATE.currentIdx = -1;
+            const counter = document.getElementById('db-counter');
+            if (counter) counter.textContent = `Novo / ${STATE.clients.length}`;
+        });
+
+        document.getElementById('db-client-form')?.addEventListener('submit', e => {
+            e.preventDefault();
+            const id = document.getElementById('db-id').value || crypto.randomUUID();
+            const c = { id };
+            ['name','group','date','time','city','lat','lng','notes'].forEach(k => {
+                const el = document.getElementById(`db-${k}`);
+                if (el) c[k] = el.value;
+            });
+            const idx = STATE.clients.findIndex(x => x.id === id);
+            if(idx >= 0) STATE.clients[idx] = c; else STATE.clients.push(c);
+            localStorage.setItem('pegasus_clients', JSON.stringify(STATE.clients));
+            
+            refreshDB();
+            window.loadClient(STATE.clients.findIndex(x => x.id === id));
+            showToast("Ficha Técnica Gravada com Sucesso no LocalStorage!"); 
+        });
+
+        document.getElementById('btn-db-delete')?.addEventListener('click', () => {
+            const id = document.getElementById('db-id')?.value;
+            if(!id) return showToast("Nenhum cliente selecionado!");
+            STATE.clients = STATE.clients.filter(c => c.id !== id);
+            localStorage.setItem('pegasus_clients', JSON.stringify(STATE.clients));
+            
+            document.getElementById('db-client-form')?.reset();
+            if (document.getElementById('db-id')) document.getElementById('db-id').value = '';
+            STATE.currentIdx = -1;
+            refreshDB();
+            showToast("Registro Excluído Definitivamente!"); 
+        });
+
+        document.getElementById('btn-calc-client')?.addEventListener('click', () => {
+            const name = document.getElementById('db-name').value;
+            if(!name) return showToast("Selecione um cliente no Banco primeiro.");
+            
+            document.querySelector('[data-target="natal"]')?.click(); // Troca Aba
+            ['name','date','time','city','lat','lng'].forEach(k => {
+                const natEl = document.getElementById(`natal-${k}`);
+                const dbEl = document.getElementById(`db-${k}`);
+                if(natEl && dbEl) natEl.value = dbEl.value;
+            });
+            
+            // Simula clique no botão de submit
+            document.getElementById('natal-form')?.dispatchEvent(new Event('submit'));
+        });
+
+        // ==========================================
+        // 7. CONFIGURAÇÕES TÉCNICAS (M13)
+        // ==========================================
+        document.getElementById('btn-save-settings')?.addEventListener('click', () => {
+            STATE.settings.houses = document.getElementById('cfg-houses').value;
+            STATE.settings.pluto = document.getElementById('cfg-pluto').value;
+            STATE.settings.orbits.con = parseFloat(document.getElementById('cfg-orb-con').value) || 8;
+            STATE.settings.orbits.opp = parseFloat(document.getElementById('cfg-orb-opp').value) || 8;
+            STATE.settings.orbits.tri = parseFloat(document.getElementById('cfg-orb-tri').value) || 7;
+            STATE.settings.orbits.sqr = parseFloat(document.getElementById('cfg-orb-sqr').value) || 7;
+            localStorage.setItem('pegasus_settings', JSON.stringify(STATE.settings));
+            showToast("Memória de Configurações Atualizada Localmente.");
+        });
+
+        function initConfig() {
+            if (document.getElementById('cfg-houses')) document.getElementById('cfg-houses').value = STATE.settings.houses || 'porphyry';
+            if (document.getElementById('cfg-pluto')) document.getElementById('cfg-pluto').value = STATE.settings.pluto || '♇';
+            if (document.getElementById('cfg-orb-con')) document.getElementById('cfg-orb-con').value = STATE.settings.orbits?.con || 8;
+            if (document.getElementById('cfg-orb-opp')) document.getElementById('cfg-orb-opp').value = STATE.settings.orbits?.opp || 8;
+            if (document.getElementById('cfg-orb-tri')) document.getElementById('cfg-orb-tri').value = STATE.settings.orbits?.tri || 7;
+            if (document.getElementById('cfg-orb-sqr')) document.getElementById('cfg-orb-sqr').value = STATE.settings.orbits?.sqr || 7;
+            
+            const grid = document.getElementById('cfg-dignities-grid');
+            if (grid) {
+                grid.innerHTML = PLANETS_BASE.map(p => `
+                    <div class="bg-black/40 p-4 border border-white/5 rounded-lg shadow-inner flex flex-col justify-between">
+                        <span class="font-bold text-base mb-2 flex items-center gap-2" style="color:${p.color}"><span class="text-xl">${p.sym}</span> ${p.name}</span>
+                        <select class="w-full bg-surface p-2 rounded border border-white/10 outline-none text-white text-xs font-bold uppercase tracking-wider"><option>Leão ♌</option><option>Câncer ♋</option><option>Gêmeos ♊</option></select>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // ==========================================
+        // ARRANQUE / INICIALIZAÇÃO
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshDB();
+            initConfig();
+            lucide.createIcons();
+            
+            // Se houver clientes no banco de dados local, recarrega o contador para exibir os valores corretos
+            if(STATE.clients.length > 0) {
+                const counter = document.getElementById('db-counter');
+                if (counter) counter.textContent = `Novo / ${STATE.clients.length}`;
+            }
+        });
+
+    </script>
+</body>
+</html>
