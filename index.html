@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AstroWeb Pro - Edição Profissional (Kepler Engine)</title>
+    <title>AstroWeb Pro - Edição Profissional</title>
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Importação das fontes para tipografia elegante (Cinzel para títulos, Inter para interface, JetBrains Mono para dados numéricos) -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
-    <!-- Lucide Icons -->
+    <!-- Lucide Icons: Biblioteca leve de ícones SVG -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS: Framework de CSS utilitário para estilização rápida -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // Configuração personalizada do Tailwind (Cores temáticas escuras com detalhes em dourado e roxo)
         tailwind.config = {
             theme: {
                 extend: {
@@ -35,33 +36,40 @@
         }
     </script>
 
+    <!-- Estilos Customizados Complementares -->
     <style>
+        /* Estilo base e fundo fixo com animação de estrelas */
         body { background-color: #0F111A; color: #F3F4F6; font-family: 'Inter', sans-serif; overflow: hidden; margin: 0; }
         
         #stars-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; background: radial-gradient(circle at bottom, #151724 0%, #0F111A 100%); }
         .star { position: absolute; background-color: #FFF; border-radius: 50%; animation: twinkle linear infinite; }
         @keyframes twinkle { 0% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.2; transform: scale(0.8); } }
 
-        /* Estilização Baseada na Imagem */
+        /* Estilos Glassmorphism para painéis e inputs (efeito vidro translúcido) */
         .glass-panel { background: #151622; border: 1px solid rgba(212, 175, 55, 0.15); border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
         .glass-input { background: #0B0C12; border: 1px solid rgba(212, 175, 55, 0.3); color: #FFF; transition: all 0.2s ease; border-radius: 6px; }
         .glass-input:focus { outline: none; border-color: #D4AF37; box-shadow: 0 0 0 1px #D4AF37; }
         
-        .btn-gold { background: linear-gradient(180deg, #E6C556 0%, #C49A28 100%); color: #111; font-weight: 700; border: none; transition: filter 0.2s; border-radius: 6px; }
+        /* Botões principais dourados */
+        .btn-gold { background: linear-gradient(180deg, #E6C556 0%, #C49A28 100%); color: #111; font-weight: 700; border: none; transition: filter 0.2s; border-radius: 6px; cursor: pointer;}
         .btn-gold:hover { filter: brightness(1.1); }
         .btn-gold:active { filter: brightness(0.9); }
+        .btn-gold:disabled { filter: grayscale(1); opacity: 0.5; cursor: not-allowed; }
 
+        /* Comportamento das seções de visualização (SPAs dinâmicas) */
         .view-section { display: none; height: 100%; overflow-y: auto; padding: 1.5rem; }
         .view-section.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .tab-btn { transition: all 0.2s; }
+        /* Estilização de abas secundárias */
+        .tab-btn { transition: all 0.2s; cursor: pointer; }
         .tab-btn.active { border-bottom: 2px solid #D4AF37; color: #D4AF37; font-weight: 600; }
         .tab-content { display: none; animation: fadeIn 0.2s ease; }
         .tab-content.active { display: block; }
-        .subtab-btn { transition: all 0.2s; white-space: nowrap; border-bottom: 2px solid transparent; }
+        .subtab-btn { transition: all 0.2s; white-space: nowrap; border-bottom: 2px solid transparent; cursor: pointer;}
         .subtab-btn.active { color: #D4AF37; border-color: #D4AF37; }
 
+        /* Customização da barra de rolagem (Scrollbar) */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
         ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 3px; }
@@ -69,51 +77,52 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
+        /* Efeitos visuais na Mandala SVG */
         .planet-group { cursor: pointer; transition: transform 0.2s; transform-origin: center; }
         .planet-group:hover { transform: scale(1.3); }
         .aspect-line { transition: opacity 0.2s; }
         .aspect-line:hover { opacity: 1 !important; stroke-width: 3; stroke: #FFF; }
 
-        #mandala-tooltip { background: #0B0C12; border: 1px solid #D4AF37; box-shadow: 0 4px 15px rgba(0,0,0,0.8); z-index: 9999; pointer-events: none; border-radius: 4px; padding: 8px; }
+        /* Tooltip e Notificações (Toasts) */
+        #mandala-tooltip { background: #0B0C12; border: 1px solid #D4AF37; box-shadow: 0 4px 15px rgba(0,0,0,0.8); z-index: 9999; pointer-events: none; border-radius: 4px; padding: 8px; position: fixed; }
         .toast { position: fixed; bottom: 24px; right: 24px; padding: 1rem 1.5rem; border-radius: 6px; background: #1A1C29; border-left: 4px solid #D4AF37; transform: translateX(150%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10000; box-shadow: 0 10px 25px rgba(0,0,0,0.5); max-width: 90vw; }
         .toast.show { transform: translateX(0); }
-
-        .premium-locked { position: relative; overflow: hidden; }
-        .premium-locked::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 17, 26, 0.85); backdrop-filter: blur(4px); z-index: 10; }
-        .premium-locked-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 11; text-align: center; width: 100%; max-width: 90vw; padding: 1rem; }
         
+        /* Resultados de busca do Atlas (Autocompletar de Cidades) */
         #atlas-results { position: absolute; top: 100%; left: 0; width: 100%; z-index: 100; max-height: 250px; overflow-y: auto; background: #0F111A; border: 1px solid rgba(212, 175, 55, 0.4); border-top: none; border-radius: 0 0 6px 6px; display: none; margin-top: 2px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
         .atlas-item { padding: 10px 14px; cursor: pointer; border-left: 2px solid transparent; border-bottom: 1px solid rgba(255,255,255,0.05); transition: all 0.2s; }
         .atlas-item:hover { background: rgba(212, 175, 55, 0.1); border-left-color: #D4AF37; }
 
-        @media print {
-            aside, header, button, .toast, #sidebar-overlay { display: none !important; }
-            .view-section { overflow: visible !important; height: auto !important; padding: 0 !important; display: block !important; }
-            body { background: white !important; color: black !important; }
-            * { border-color: #ccc !important; }
-            svg { max-width: 100% !important; filter: invert(1); }
-            #stars-container { display: none !important; }
-            .glass-panel { background: transparent !important; backdrop-filter: none !important; border: 1px solid #ddd !important; box-shadow: none !important; }
-        }
+        /* Auth Overlay: Tela de carregamento enquanto o Firebase sincroniza dados em Nuvem */
+        #auth-overlay { position: fixed; inset: 0; background: rgba(15, 17, 26, 0.95); backdrop-filter: blur(10px); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
     </style>
 </head>
 <body class="flex h-screen text-sm bg-base">
 
+    <!-- TELA DE CARREGAMENTO INICIAL (Bloqueia até autenticar no Banco em Nuvem) -->
+    <div id="auth-overlay">
+        <i data-lucide="compass" class="w-16 h-16 text-gold mb-4 animate-[spin_4s_linear_infinite]"></i>
+        <h1 class="font-cinzel text-2xl text-gold font-bold mb-2">AstroWeb Pro</h1>
+        <p class="text-textMuted text-xs mb-4">Autenticando na rede segura...</p>
+        <div class="w-48 h-1 bg-white/10 rounded overflow-hidden">
+            <div class="h-full bg-gold w-1/2 animate-[pulse_1s_ease-in-out_infinite]"></div>
+        </div>
+    </div>
+
+    <!-- Container de Animação de Fundo -->
     <div id="stars-container"></div>
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
 
-    <!-- SIDEBAR -->
+    <!-- BARRA LATERAL (MENU DE NAVEGAÇÃO) -->
     <aside id="sidebar" class="fixed md:relative z-50 h-full w-64 md:w-64 transform -translate-x-full md:translate-x-0 transition-all duration-300 flex flex-col bg-[#11121C] md:bg-transparent glass-panel md:border-y-0 md:border-l-0 md:rounded-none shrink-0 border-r border-gold/10">
         <div class="h-16 flex items-center justify-between px-5 border-b border-white/5 shrink-0">
             <span class="font-cinzel text-lg font-bold text-gold sidebar-text tracking-widest uppercase">AstroWeb<span class="text-white">Pro</span></span>
+            <!-- Botões para recolher menu em desktop e celular -->
             <button id="toggle-sidebar" class="p-1.5 text-gold hover:bg-white/10 rounded transition-colors hidden md:block"><i data-lucide="menu" class="w-5 h-5"></i></button>
             <button id="close-sidebar-mobile" class="p-1.5 text-gold hover:bg-white/10 rounded transition-colors md:hidden"><i data-lucide="x" class="w-5 h-5"></i></button>
         </div>
         <nav class="flex-1 py-4 flex flex-col gap-0.5 px-3 overflow-y-auto scrollbar-hide text-sm">
-            <button data-target="dashboard" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all">
-                <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Dashboard</span>
-            </button>
-            
+            <!-- Botões de navegação chamam data-target correspondente à seção de visualização -->
             <button data-target="natal" class="nav-btn active flex items-center gap-3 px-3 py-2.5 rounded bg-gold/10 text-gold border border-gold/20 transition-all mt-2">
                 <i data-lucide="star" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Mapa Natal</span>
             </button>
@@ -121,37 +130,22 @@
                 <i data-lucide="users" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Sinastria</span>
             </button>
 
-            <div class="text-[10px] font-bold uppercase tracking-widest text-gold/40 mt-4 mb-1 sidebar-text pl-3">Previsões</div>
+            <!-- NOVIDADE: Módulos Expandidos de Previsão -->
+            <div class="text-[10px] font-bold uppercase tracking-widest text-gold/40 mt-4 mb-1 sidebar-text pl-3">Previsões e Ciclos</div>
             <button data-target="forecasts" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all">
                 <i data-lucide="activity" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Trânsitos/Direções</span>
             </button>
             <button data-target="returns" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all">
-                <i data-lucide="refresh-cw" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Revoluções</span>
+                <i data-lucide="refresh-cw" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Revoluções (Retornos)</span>
             </button>
             <button data-target="lunations" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all mb-2">
-                <i data-lucide="moon" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Lunações</span>
+                <i data-lucide="moon" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Fases Lunares</span>
             </button>
 
-            <div class="text-[10px] font-bold uppercase tracking-widest text-gold/40 mt-4 mb-1 sidebar-text pl-3">Avançados</div>
-            <button data-target="sensitive" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all">
-                <i data-lucide="target" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Pontos Sensíveis</span>
-            </button>
-            <button data-target="rectification" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all">
-                <i data-lucide="clock" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Retificação</span>
-            </button>
-            <button data-target="mundial" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all">
-                <i data-lucide="globe" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Astrologia Mundial</span>
-            </button>
-            <button data-target="localspace" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all">
-                <i data-lucide="compass" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Local Space</span>
-            </button>
-            <button data-target="tables" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all">
-                <i data-lucide="scissors" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Tabelas Beleza</span>
-            </button>
-
+            <!-- NOVIDADE: Integração Cloud DB -->
             <div class="mt-6 pt-3 border-t border-white/5 shrink-0 mb-4">
                 <button data-target="clients" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all">
-                    <i data-lucide="database" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Banco de Dados</span>
+                    <i data-lucide="database" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Banco de Dados (Cloud)</span>
                 </button>
                 <button data-target="settings" class="nav-btn flex items-center gap-3 px-3 py-2.5 rounded text-textMuted hover:bg-white/5 transition-all">
                     <i data-lucide="settings" class="w-4 h-4 shrink-0"></i> <span class="sidebar-text font-medium truncate">Configuração</span>
@@ -160,8 +154,9 @@
         </nav>
     </aside>
 
-    <!-- MAIN CONTENT -->
+    <!-- ÁREA PRINCIPAL DO SISTEMA -->
     <main class="flex-1 flex flex-col h-screen relative z-10 overflow-hidden w-full">
+        <!-- Cabeçalho (Header) com Indicador de Conexão à Nuvem -->
         <header class="h-16 glass-panel border-x-0 border-t-0 rounded-none flex items-center justify-between px-6 shrink-0 shadow-md">
             <div class="flex items-center gap-3 text-textMuted">
                 <button id="mobile-toggle" class="md:hidden text-gold p-1 hover:bg-white/10 rounded transition-colors"><i data-lucide="menu"></i></button>
@@ -169,69 +164,35 @@
                 <span id="current-module-title" class="text-gold font-cinzel font-bold text-lg tracking-wide uppercase">Mapa Natal</span>
             </div>
             <div class="flex items-center gap-4">
-                <div class="hidden sm:flex items-center gap-1.5 text-[11px] bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded border border-emerald-500/20 font-mono">
-                    <i data-lucide="check-circle" class="w-3 h-3"></i> <span>Placidus & Kepler OK</span>
+                <!-- Indicador de Status Firebase (Nuvem Conectada / Offline) -->
+                <div class="hidden sm:flex items-center gap-1.5 text-[11px] bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded border border-emerald-500/20 font-mono" id="cloud-status">
+                    <i data-lucide="cloud-off" class="w-3 h-3" id="cloud-icon"></i> <span id="cloud-text">Offline</span>
                 </div>
-                <button id="btn-print" class="btn-gold px-4 py-1.5 rounded flex items-center gap-2 text-xs shadow-xl h-8">
-                    <i data-lucide="printer" class="w-3 h-3"></i> <span class="hidden sm:inline">Imprimir</span>
-                </button>
             </div>
         </header>
 
         <div class="flex-1 overflow-hidden relative w-full">
             
-            <!-- VIEW: DASHBOARD -->
-            <section id="view-dashboard" class="view-section">
-                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-3"><i data-lucide="layout-dashboard" class="w-6 h-6 text-purple"></i> Dashboard</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass-panel p-6 relative overflow-hidden">
-                        <div class="absolute -right-4 -top-4 text-gold/10"><i data-lucide="shield-check" class="w-32 h-32"></i></div>
-                        <div class="relative z-10">
-                            <h3 class="text-xl font-bold mb-2">Licença Ativa</h3>
-                            <p class="text-textMuted text-xs mb-6">Versão Profissional Local.</p>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="toggle-plan" class="sr-only peer" checked>
-                                <div class="w-12 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
-                                <span class="ml-3 text-xs font-bold text-white" id="plan-status-text">Premium Assinante</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="glass-panel p-6 text-center flex flex-col justify-center items-center">
-                        <i data-lucide="users" class="w-8 h-8 text-purple mb-3"></i>
-                        <h3 class="text-3xl font-bold mb-1 font-mono text-white" id="dash-client-count">0</h3>
-                        <p class="text-textMuted text-xs uppercase tracking-wider font-semibold">Mapas Salvos</p>
-                    </div>
-                    <div class="glass-panel p-6 text-center flex flex-col justify-center items-center">
-                        <i data-lucide="zap" class="w-8 h-8 text-emerald-400 mb-3"></i>
-                        <h3 class="text-xl font-bold mb-1 text-white">Alta Precisão</h3>
-                        <p class="text-textMuted text-[10px] uppercase tracking-wider font-semibold">Motor Kepleriano JPL Embutido</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- VIEW: NATAL (MOD 02-04) FIEL À IMAGEM -->
+            <!-- MÓDULO 1: MAPA NATAL (RADIX) -->
             <section id="view-natal" class="view-section active">
                 <div class="flex flex-col h-full gap-5 pb-8">
-                    <!-- TOPO: Formulário Horizontal (Conforme Imagem 4) -->
+                    
+                    <!-- NOVIDADE: Painel Superior com Entrada Manual de Dados Latitude e Longitude -->
                     <div class="glass-panel p-5 shrink-0">
                         <form id="natal-form" class="flex flex-col gap-4">
-                            <!-- Linha 1: Nome -->
                             <div class="space-y-1">
                                 <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Nome do Nato</label>
                                 <input type="text" id="natal-name" class="w-full glass-input px-3 py-2 rounded text-sm font-medium" placeholder="Ex: Paulo Roberto...">
                             </div>
-                            
-                            <!-- Linha 2: Data, Hora, Fuso -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div class="space-y-1">
-                                    <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Data de Nasc.</label>
+                                    <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Data</label>
                                     <input type="date" id="natal-date" class="w-full glass-input px-3 py-2 rounded text-sm font-mono" required>
                                 </div>
                                 <div class="space-y-1">
-                                    <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Hora Exata (Nasc.)</label>
+                                    <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Hora</label>
                                     <div class="relative">
-                                        <input type="time" id="natal-time" step="1" class="w-full glass-input px-3 py-2 rounded text-sm font-mono" required value="18:56:00">
-                                        <i data-lucide="clock" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/40"></i>
+                                        <input type="time" id="natal-time" step="1" class="w-full glass-input px-3 py-2 rounded text-sm font-mono" required value="12:00:00">
                                     </div>
                                 </div>
                                 <div class="space-y-1">
@@ -240,19 +201,19 @@
                                 </div>
                             </div>
 
-                            <!-- Linha 3: Local, Lat/Lng, Botão -->
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                                <!-- Pesquisa na base do Atlas Global -->
                                 <div class="md:col-span-6 space-y-1 relative">
-                                    <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Local (Atlas Global)</label>
-                                    <input type="text" id="natal-city" class="w-full glass-input px-3 py-2 rounded text-sm font-medium focus:border-gold focus:ring-1 focus:ring-gold/30" placeholder="Ex: Porto Alegre, RS" autocomplete="off">
-                                    <!-- Sugestões Atlas -->
+                                    <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Local (Atlas/Manual)</label>
+                                    <input type="text" id="natal-city" class="w-full glass-input px-3 py-2 rounded text-sm font-medium" placeholder="Digite cidade ou insira Lat/Lng livremente" autocomplete="off">
                                     <div id="atlas-results"></div>
                                 </div>
+                                <!-- NOVIDADE: Campos explícitos para colocar Coordenadas de forma MANUAL (Lat/Lng) -->
                                 <div class="md:col-span-4 space-y-1">
-                                    <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Lat / Lng</label>
+                                    <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Lat / Lng (Decimais)</label>
                                     <div class="flex gap-2">
-                                        <input type="number" id="natal-lat" step="0.0001" class="w-1/2 glass-input px-2 py-2 rounded text-[11px] font-mono text-center bg-black/30" required title="Latitude">
-                                        <input type="number" id="natal-lng" step="0.0001" class="w-1/2 glass-input px-2 py-2 rounded text-[11px] font-mono text-center bg-black/30" required title="Longitude">
+                                        <input type="number" id="natal-lat" step="0.0001" class="w-1/2 glass-input px-2 py-2 rounded text-[11px] font-mono text-center bg-black/30" required title="Latitude (-Sul, +Norte)">
+                                        <input type="number" id="natal-lng" step="0.0001" class="w-1/2 glass-input px-2 py-2 rounded text-[11px] font-mono text-center bg-black/30" required title="Longitude (-Oeste, +Leste)">
                                     </div>
                                 </div>
                                 <div class="md:col-span-2">
@@ -264,39 +225,37 @@
                         </form>
                     </div>
 
-                    <!-- MEIO: Grid de Mandala e Resultados -->
+                    <!-- Gráficos Visuais e Tabelas Resultantes -->
                     <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 flex-1 min-h-0">
                         
-                        <!-- MANDALA -->
+                        <!-- RENDERIZAÇÃO DA MANDALA SVG -->
                         <div class="xl:col-span-6 glass-panel p-4 flex flex-col items-center justify-center relative min-h-[350px]">
                             <div id="mandala-container" class="w-full max-w-[400px] aspect-square relative z-10">
+                                <!-- Estrela girando é o placeholder enquanto não calcular -->
                                 <div class="w-full h-full rounded-full border-4 border-dashed border-gold/10 flex items-center justify-center animate-[spin_60s_linear_infinite]">
                                     <i data-lucide="star" class="w-10 h-10 text-gold/10"></i>
                                 </div>
                             </div>
                             <div id="mandala-tooltip" class="absolute hidden text-white rounded z-50"></div>
                             <div class="absolute bottom-4 right-4 text-[10px] font-mono bg-black/50 px-3 py-1 rounded border border-white/5" id="elements-bar">
-                                Sistema de Casas: <span class="text-gold font-bold">PLACIDUS</span>
+                                Sistema: <span class="text-gold font-bold">PLACIDUS</span>
                             </div>
                         </div>
 
-                        <!-- RESULTADOS (Abas) -->
+                        <!-- TABELAS COM OS CÁLCULOS -->
                         <div class="xl:col-span-6 flex flex-col gap-4 overflow-hidden h-full">
                             <div class="flex gap-4 border-b border-gold/20 pb-1 shrink-0 px-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
-                                <button class="subtab-btn active text-xs font-bold px-1 pb-1" data-subtab="nt-coords">Coordenadas</button>
+                                <button class="subtab-btn active text-xs font-bold px-1 pb-1" data-subtab="nt-coords">Posições</button>
                                 <button class="subtab-btn text-xs font-bold px-1 pb-1 text-textMuted" data-subtab="nt-aspects">Aspectos</button>
-                                <button class="subtab-btn text-xs font-bold px-1 pb-1 text-textMuted" data-subtab="nt-trad">Tradicional</button>
-                                <button class="subtab-btn text-xs font-bold px-1 pb-1 text-textMuted" data-subtab="nt-points">Pontos</button>
-                                <button class="subtab-btn text-xs font-bold px-1 pb-1 text-textMuted" data-subtab="nt-harm">Harmônicas</button>
                             </div>
 
                             <div class="flex-1 overflow-y-auto pr-1">
-                                <!-- COORDENADAS -->
+                                <!-- Aba de Coordenadas/Casas -->
                                 <div id="nt-coords" class="tab-content active glass-panel p-0 overflow-hidden flex flex-col h-full border-0">
                                     <div class="overflow-x-auto flex-1">
                                         <table class="w-full text-left text-xs whitespace-nowrap">
                                             <thead class="bg-black/60 text-gold uppercase tracking-widest text-[9px] sticky top-0 z-10">
-                                                <tr><th class="p-3">Astro / Ponto</th><th class="p-3 text-right">Longitude</th><th class="p-3">Signo</th><th class="p-3 text-center">Casa</th></tr>
+                                                <tr><th class="p-3">Astros</th><th class="p-3 text-right">Longitude</th><th class="p-3">Signo</th><th class="p-3">Casa</th></tr>
                                             </thead>
                                             <tbody id="nt-table-planets" class="divide-y divide-white/5 bg-transparent">
                                                 <tr><td colspan="4" class="p-6 text-center text-textMuted italic">Aguardando dados...</td></tr>
@@ -306,40 +265,9 @@
                                     <div class="p-3 border-t border-white/5 bg-black/30 font-mono text-[9px] text-textMuted flex flex-wrap gap-x-4 gap-y-1" id="nt-house-cusps"></div>
                                 </div>
 
-                                <!-- ASPECTOS -->
+                                <!-- Aba de Aspectos -->
                                 <div id="nt-aspects" class="tab-content glass-panel p-4 h-full border-0">
                                     <div id="nt-aspects-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]"></div>
-                                </div>
-
-                                <!-- TRADICIONAL -->
-                                <div id="nt-trad" class="tab-content glass-panel p-4 h-full border-0">
-                                    <div class="overflow-x-auto rounded border border-white/5 bg-black/20">
-                                        <table class="w-full text-left text-[11px] whitespace-nowrap">
-                                            <thead class="bg-black/60 text-gold uppercase tracking-widest text-[9px]"><tr><th class="p-2">Planeta</th><th class="p-2">Antiscia</th><th class="p-2">Contra-Ant.</th><th class="p-2">Condição</th></tr></thead>
-                                            <tbody id="nt-trad-table" class="divide-y divide-white/5 font-mono"></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <!-- PONTOS -->
-                                <div id="nt-points" class="tab-content glass-panel p-4 h-full border-0">
-                                    <h4 class="text-gold font-bold mb-2 uppercase tracking-wider text-[10px] border-b border-white/10 pb-1">Partes Arábicas (Al-Biruni)</h4>
-                                    <ul id="nt-arabic-list" class="space-y-1.5 text-[11px] font-mono text-textMuted bg-black/20 p-3 rounded border border-white/5 overflow-x-auto whitespace-nowrap"></ul>
-                                </div>
-
-                                <!-- HARMONICAS -->
-                                <div id="nt-harm" class="tab-content glass-panel p-4 h-full border-0">
-                                    <div class="flex items-center gap-3 mb-4">
-                                        <label class="text-[10px] font-bold text-gold uppercase tracking-wider">Harmônica:</label>
-                                        <input type="number" id="harm-num" value="4" min="2" max="360" class="w-16 glass-input p-1.5 rounded text-center text-xs font-bold">
-                                        <button id="btn-calc-harm" class="btn-gold px-3 py-1.5 rounded text-xs">Gerar</button>
-                                    </div>
-                                    <div class="overflow-x-auto rounded border border-white/5 bg-black/20">
-                                        <table class="w-full text-left text-[11px] whitespace-nowrap">
-                                            <thead class="bg-black/60 text-gold uppercase tracking-widest text-[9px]"><tr><th class="p-2">Planeta</th><th class="p-2">Long. Harmônica</th><th class="p-2">Signo Resultante</th></tr></thead>
-                                            <tbody id="nt-harm-table" class="divide-y divide-white/5 text-textMuted font-mono"></tbody>
-                                        </table>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -347,7 +275,7 @@
                 </div>
             </section>
 
-            <!-- VIEW: SINASTRIA -->
+            <!-- MÓDULO 2: SINASTRIA (Bi-Wheel entre dois mapas salvos) -->
             <section id="view-synastry" class="view-section">
                 <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="users" class="w-6 h-6 text-purple"></i> Sinastria (Bi-Wheel)</h2>
                 <div class="glass-panel p-5 mb-6">
@@ -361,10 +289,10 @@
                         <div class="space-y-1">
                             <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Mapa Externo (Parceiro)</label>
                             <select id="synastry-p2" class="w-full glass-input p-2.5 rounded text-sm" required>
-                                <option value="">Selecione cliente...</option>
+                                <option value="">Selecione da base...</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn-gold w-full md:w-auto px-6 py-2.5 rounded flex items-center justify-center gap-2 h-[38px] text-sm"><i data-lucide="layers" class="w-4 h-4"></i> Processar</button>
+                        <button type="submit" class="btn-gold w-full md:w-auto px-6 py-2.5 rounded flex items-center justify-center gap-2 h-[38px] text-sm"><i data-lucide="layers" class="w-4 h-4"></i> Processar Bi-Wheel</button>
                     </form>
                 </div>
                 <div id="synastry-results" class="hidden grid-cols-1 xl:grid-cols-2 gap-6 pb-10">
@@ -372,299 +300,350 @@
                         <div id="synastry-svg-container" class="w-full h-full"></div>
                     </div>
                     <div class="glass-panel p-4 max-h-[500px] overflow-y-auto">
-                        <h3 class="text-gold font-cinzel text-lg font-bold mb-4 border-b border-gold/20 pb-2">Interaspectos Exatos</h3>
-                        <div id="synastry-aspects-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"></div>
+                        <h3 class="text-gold font-cinzel text-lg font-bold mb-4 border-b border-gold/20 pb-2">Interaspectos</h3>
+                        <div id="synastry-aspects-grid" class="grid grid-cols-1 gap-2 text-xs"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- VIEW: PREVISÕES -->
+            <!-- MÓDULO 3: PREVISÕES, DIREÇÕES E TRÂNSITOS EXATOS -->
             <section id="view-forecasts" class="view-section">
                 <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="activity" class="w-6 h-6 text-purple"></i> Dinâmica de Previsões</h2>
-                <div class="glass-panel p-5 mb-6">
-                    <form id="forecast-form" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-end">
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Data Alvo</label>
-                            <input type="date" id="forecast-date" required class="w-full glass-input p-2.5 rounded text-sm font-mono">
+                
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+                    <!-- PAINEL DE DIREÇÕES GERAIS E TRÂNSITOS DIÁRIOS (BI-WHEEL) -->
+                    <div class="glass-panel p-5">
+                        <h3 class="text-white font-bold border-b border-gold/20 pb-2 mb-4 text-sm">Mapa Dinâmico Geral</h3>
+                        <form id="forecast-form" class="flex flex-col gap-4">
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <div class="space-y-1 flex-1">
+                                    <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Data Alvo</label>
+                                    <input type="date" id="forecast-date" required class="w-full glass-input p-2.5 rounded text-sm font-mono">
+                                </div>
+                                <div class="space-y-1 flex-1">
+                                    <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Método</label>
+                                    <select id="forecast-method" class="w-full glass-input p-2.5 rounded text-sm">
+                                        <!-- NOVIDADE: Opção mantida e aprimorada de Trânsito Diário Genérico ou Direção -->
+                                        <option value="transit">Trânsitos Diários Reais</option>
+                                        <option value="sec_prog">Direções Secundárias (1d=1a)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-gold w-full px-4 py-2.5 rounded flex items-center justify-center gap-2 text-sm"><i data-lucide="play-circle" class="w-4 h-4"></i> Gerar Bi-Wheel Dinâmico</button>
+                        </form>
+                    </div>
+
+                    <!-- NOVIDADE - Painel Exclusivo para Hits (Calculadora de Trânsitos Exatos) -->
+                    <div class="glass-panel p-5 border border-purple/30 bg-purple/5">
+                        <h3 class="text-purple-400 font-bold border-b border-purple/30 pb-2 mb-4 text-sm flex items-center gap-2">
+                            <i data-lucide="crosshair" class="w-4 h-4"></i> Calculadora de Trânsitos Exatos (Hits)
+                        </h3>
+                        <form id="hit-form" class="flex flex-col gap-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- Define qual planeta está em movimento -->
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold text-purple-300 uppercase tracking-widest">Trânsito de</label>
+                                    <select id="hit-tplanet" class="w-full glass-input p-2.5 rounded text-sm bg-black/40 border-purple/30">
+                                        <!-- As opções (Lua, Sol, etc.) são preenchidas pelo JS no carregamento -->
+                                    </select>
+                                </div>
+                                <!-- Define qual ponto Natal estático sofrerá o trânsito (ex: Ascendente) -->
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-bold text-purple-300 uppercase tracking-widest">Passando por (Natal)</label>
+                                    <select id="hit-npoint" class="w-full glass-input p-2.5 rounded text-sm bg-black/40 border-purple/30">
+                                        <option value="asc">Ascendente (ASC)</option>
+                                        <option value="mc">Meio do Céu (MC)</option>
+                                        <option value="sun">Sol</option>
+                                        <option value="moon">Lua</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex items-end gap-4">
+                                <div class="space-y-1 flex-1">
+                                    <label class="text-[10px] font-bold text-purple-300 uppercase tracking-widest">A partir de</label>
+                                    <input type="date" id="hit-startdate" required class="w-full glass-input p-2.5 rounded text-sm font-mono bg-black/40 border-purple/30">
+                                </div>
+                                <!-- Chama a função findExactTransit ao clicar -->
+                                <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-4 py-2.5 rounded flex items-center justify-center gap-2 h-[42px] transition-colors"><i data-lucide="search" class="w-4 h-4"></i> Buscar Ocorrência</button>
+                            </div>
+                        </form>
+                        
+                        <!-- Caixa onde a data exata da conjunção aparece -->
+                        <div id="hit-result" class="mt-4 hidden p-3 bg-black/50 border border-emerald-500/30 rounded text-center">
+                            <div class="text-[10px] text-emerald-400 uppercase tracking-widest font-bold mb-1">Próxima Conjunção Exata (0°):</div>
+                            <div class="text-white font-mono font-bold text-sm" id="hit-date-output">--</div>
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Método</label>
-                            <select id="forecast-method" class="w-full glass-input p-2.5 rounded text-sm">
-                                <option value="transit">Trânsitos Diários Reais</option>
-                                <option value="sec_prog">Direções Secundárias (1d=1a)</option>
-                                <option value="sym_degree">Simbólica (1°/Ano)</option>
-                                <option value="sym_naibod">Simbólica (Naibod)</option>
-                            </select>
-                        </div>
-                        <div class="sm:col-span-2 md:col-span-1">
-                            <button type="submit" class="btn-gold w-full px-4 py-2.5 rounded flex items-center justify-center gap-2 h-[38px] text-sm"><i data-lucide="play-circle" class="w-4 h-4"></i> Executar</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
+
+                <!-- Painel Oculto onde renderiza o Mapa de Previsões (Bi-Wheel) -->
                 <div id="forecast-results" class="hidden grid-cols-1 xl:grid-cols-2 gap-6 pb-10">
                     <div class="glass-panel p-4 flex flex-col items-center relative w-full max-w-[500px] mx-auto aspect-square">
                         <div id="forecast-svg-container" class="w-full h-full"></div>
                     </div>
                     <div class="glass-panel p-4 max-h-[500px] overflow-y-auto">
-                        <h3 class="text-gold font-cinzel text-lg font-bold mb-4 border-b border-gold/20 pb-2" id="forecast-title">Tabela de Aspectos</h3>
-                        <table class="w-full text-left text-xs whitespace-nowrap">
-                            <thead class="bg-black/60 text-gold uppercase tracking-widest text-[9px]"><tr><th class="p-2">Astros</th><th class="p-2">Posição Dinâmica</th><th class="p-2">Aspecto ao Radix</th></tr></thead>
-                            <tbody id="forecast-table-body" class="divide-y divide-white/5 text-textMuted bg-black/20 font-mono"></tbody>
-                        </table>
+                        <h3 class="text-gold font-cinzel text-lg font-bold mb-4 border-b border-gold/20 pb-2" id="forecast-title">Aspectos</h3>
+                        <div id="forecast-aspects-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- VIEW: REVOLUÇÕES -->
+            <!-- MÓDULO 4: REVOLUÇÕES DE PLANETAS (RETORNOS) -->
             <section id="view-returns" class="view-section">
-                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="refresh-cw" class="w-6 h-6 text-purple"></i> Revolução Solar (Retorno Exato)</h2>
+                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="refresh-cw" class="w-6 h-6 text-purple"></i> Ciclos de Revoluções (Retornos)</h2>
                 <div class="glass-panel p-5 mb-6">
                     <form id="return-form" class="flex flex-col sm:flex-row gap-4 items-end">
-                        <div class="space-y-1 w-full sm:flex-1 sm:max-w-xs">
-                            <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Ano do Retorno Solar</label>
-                            <input type="number" id="return-year" required class="w-full glass-input p-2.5 rounded text-center text-lg font-mono font-bold" min="1900" max="2100" value="2025">
+                        <div class="space-y-1 w-full sm:flex-1">
+                            <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Planeta</label>
+                            <!-- NOVIDADE: Suporte para retorno de 8 corpos celestes (Sem Netuno e Plutão como solicitado) -->
+                            <select id="return-planet-sel" class="w-full glass-input p-2.5 rounded text-sm font-bold">
+                                <option value="sun">Sol (Revolução Solar)</option>
+                                <option value="moon">Lua (Revolução Lunar)</option>
+                                <option value="mercury">Mercúrio</option>
+                                <option value="venus">Vênus</option>
+                                <option value="mars">Marte</option>
+                                <option value="jupiter">Júpiter</option>
+                                <option value="saturn">Saturno</option>
+                                <option value="uranus">Urano</option>
+                            </select>
                         </div>
-                        <button type="submit" class="btn-gold w-full sm:w-auto px-6 py-2.5 rounded h-[42px] flex items-center justify-center gap-2 text-sm"><i data-lucide="target" class="w-4 h-4"></i> Processar Itreação</button>
+                        <div class="space-y-1 w-full sm:flex-1">
+                            <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">A partir da data</label>
+                            <input type="date" id="return-start-date" required class="w-full glass-input p-2.5 rounded text-center text-sm font-mono">
+                        </div>
+                        <button type="submit" class="btn-gold w-full sm:w-auto px-6 py-2.5 rounded h-[42px] flex items-center justify-center gap-2 text-sm"><i data-lucide="target" class="w-4 h-4"></i> Encontrar Retorno</button>
                     </form>
                 </div>
+                
+                <!-- Resultados da Revolução Encontrada -->
                 <div id="return-results" class="hidden grid-cols-1 xl:grid-cols-2 gap-6 pb-10">
                     <div class="glass-panel p-4 flex flex-col items-center relative w-full max-w-[500px] mx-auto aspect-square">
                         <div id="return-svg-container" class="w-full h-full"></div>
                     </div>
-                    <div class="glass-panel p-6 flex flex-col gap-4">
-                        <div class="bg-emerald-500/10 border border-emerald-500/30 p-4 rounded text-center">
-                            <div class="text-[10px] text-emerald-400/80 uppercase tracking-widest font-bold mb-1">Momento do Retorno Exato</div>
-                            <div class="text-emerald-400 font-mono text-xl font-bold" id="return-exact-date">Calculando...</div>
+                    <div class="glass-panel p-6 flex flex-col gap-4 justify-center">
+                        <div class="bg-emerald-500/10 border border-emerald-500/30 p-6 rounded text-center">
+                            <div class="text-[11px] text-emerald-400/80 uppercase tracking-widest font-bold mb-2">Momento do Retorno Exato</div>
+                            <!-- A data e hora exatas encontradas no Algoritmo iterativo são injetadas aqui -->
+                            <div class="text-emerald-400 font-mono text-2xl font-bold" id="return-exact-date">Calculando...</div>
+                            <div class="text-white mt-2 text-sm" id="return-target-lon"></div>
                         </div>
-                        <p class="text-xs text-textMuted mt-2">O motor matemático de Meeus iterou no tempo para encontrar o exato minuto em que a longitude do Sol de trânsito se igualou ao Sol Radix.</p>
+                        <p class="text-xs text-textMuted mt-2 text-center">O algoritmo utiliza busca iterativa dia a dia e posterior interpolação linear refinada para encontrar o minuto exato em que a longitude do trânsito se iguala à posição radical.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- VIEW: LUNAÇÕES -->
+            <!-- MÓDULO 5: LUNAÇÕES (Efemérides Mensais Reais) -->
             <section id="view-lunations" class="view-section">
-                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="moon" class="w-6 h-6 text-blue-400"></i> Efemérides de Lunações Reais</h2>
+                <!-- NOVIDADE: Rastreador de fases da Lua precisas para um dado mês -->
+                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="moon" class="w-6 h-6 text-blue-400"></i> Fases Lunares (Efemérides Astronômicas)</h2>
                 <div class="glass-panel p-6 mb-10">
+                    <p class="text-xs text-textMuted mb-4 border-b border-white/10 pb-4">Calcula o momento exato das 4 fases principais da Lua para o mês selecionado, baseando-se na distância angular entre o Sol e a Lua.</p>
                     <div class="flex flex-col sm:flex-row gap-4 mb-6">
                         <div class="space-y-1 w-full sm:w-auto">
                             <label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Mês Analisado</label>
                             <input type="month" id="lunation-month" class="w-full sm:w-48 glass-input p-2.5 rounded text-sm font-mono">
                         </div>
                         <div class="flex items-end w-full sm:w-auto">
-                            <button id="btn-calc-lunations" class="btn-gold w-full sm:w-auto px-5 py-2.5 rounded h-[42px] text-sm flex items-center justify-center gap-2"><i data-lucide="search" class="w-4 h-4"></i> Rastrear Órbita</button>
+                            <button id="btn-calc-lunations" class="btn-gold w-full sm:w-auto px-5 py-2.5 rounded h-[42px] text-sm flex items-center justify-center gap-2"><i data-lucide="search" class="w-4 h-4"></i> Calcular Efeméride</button>
                         </div>
                     </div>
+                    <!-- Tabela resultado das Lunações -->
                     <table class="w-full text-left text-xs whitespace-nowrap">
                         <thead class="bg-black/60 text-gold uppercase tracking-widest text-[9px]">
-                            <tr><th class="p-3">Fase Lunar Astronómica</th><th class="p-3">Data e Hora Extata</th><th class="p-3">Signo e Grau</th></tr>
+                            <tr><th class="p-3">Fase Lunar</th><th class="p-3">Data e Hora Extata</th><th class="p-3">Posição (Grau)</th></tr>
                         </thead>
                         <tbody id="lunations-body" class="divide-y divide-white/5 font-mono bg-black/20">
-                            <tr><td colspan="3" class="p-6 text-center text-textMuted italic">Clique em "Rastrear Órbita".</td></tr>
+                            <tr><td colspan="3" class="p-6 text-center text-textMuted italic">Selecione o mês e clique em Calcular.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </section>
 
-            <!-- VIEW: PONTOS SENSÍVEIS -->
-            <section id="view-sensitive" class="view-section">
-                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="target" class="w-6 h-6 text-emerald-400"></i> Pontos Sensíveis (Huber)</h2>
-                <div class="glass-panel p-6 mb-6 flex flex-col sm:flex-row gap-4 items-end">
-                    <div class="space-y-1 w-full sm:w-32"><label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Idade (Anos)</label><input type="number" id="sensitive-age" value="30" step="0.1" class="w-full glass-input p-2.5 rounded text-lg font-mono text-center font-bold text-white"></div>
-                    <button type="button" id="btn-calc-sensitive" class="btn-gold w-full sm:w-auto px-6 py-2.5 rounded h-[42px] text-sm"><i data-lucide="calculator" class="inline w-4 h-4 mr-1"></i> Projetar</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center pb-10">
-                    <div class="glass-panel p-6 rounded bg-black/20"><h4 class="text-white font-cinzel font-bold text-lg mb-2">Age-Point (Koch)</h4><p class="text-[10px] text-textMuted mb-4">6 anos por casa.</p><p class="text-gold font-mono text-2xl font-bold" id="sp-agepoint">--</p></div>
-                    <div class="glass-panel p-6 rounded bg-black/20"><h4 class="text-white font-cinzel font-bold text-lg mb-2">Pro-Luna</h4><p class="text-[10px] text-textMuted mb-4">7 anos por casa.</p><p class="text-gold font-mono text-2xl font-bold" id="sp-proluna">--</p></div>
-                    <div class="glass-panel p-6 rounded bg-black/20"><h4 class="text-white font-cinzel font-bold text-lg mb-2">Fatum</h4><p class="text-[10px] text-textMuted mb-4">Ponto logarítmico.</p><p class="text-gold font-mono text-2xl font-bold" id="sp-fatum">--</p></div>
-                </div>
-            </section>
-
-            <!-- VIEW: RETIFICAÇÃO DE HORÁRIO -->
-            <section id="view-rectification" class="view-section">
-                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="clock" class="w-6 h-6 text-blue-400"></i> Retificação (Algoritmo Estatístico Real)</h2>
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-10">
-                    <div class="lg:col-span-5 glass-panel p-5 flex flex-col gap-4">
-                        <h3 class="text-white font-bold border-b border-gold/20 pb-2 text-sm">1. Eventos Reais</h3>
-                        <form id="rect-form" class="flex flex-col gap-3">
-                            <div class="space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Descrição</label><input type="text" id="rect-desc" required class="w-full glass-input p-2 rounded text-xs"></div>
-                            <div class="flex items-end gap-2">
-                                <div class="flex-1 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Data</label><input type="date" id="rect-date" required class="w-full glass-input p-2 rounded text-xs font-mono"></div>
-                                <button type="submit" class="btn-gold px-4 py-2 rounded text-xs h-[34px]"><i data-lucide="plus" class="w-3 h-3"></i> Add</button>
-                            </div>
-                        </form>
-                        <div class="flex-1 overflow-y-auto bg-black/30 rounded border border-white/10 p-2 min-h-[150px]">
-                            <table class="w-full text-[10px] text-left whitespace-nowrap"><tbody id="rect-events-body" class="divide-y divide-white/5 text-textMuted"></tbody></table>
-                        </div>
-                    </div>
-                    
-                    <div class="lg:col-span-7 glass-panel p-5 flex flex-col min-h-[300px]">
-                        <h3 class="text-white font-bold border-b border-gold/20 pb-2 mb-4 text-sm">2. Histograma de Probabilidade (Progressão vs Ângulos)</h3>
-                        <div class="flex-1 flex flex-col items-center justify-end border border-white/10 rounded bg-black/50 p-4 relative overflow-hidden">
-                            <div id="rect-chart" class="w-full h-full flex items-end justify-between px-2 gap-1 relative z-10">
-                                <div class="w-full h-full flex items-center justify-center text-textMuted italic text-[10px] text-center">Insira as datas ao lado para gerar o histograma...</div>
-                            </div>
-                            <div class="absolute w-full border-t border-red-500/40 bottom-8 z-0"></div>
-                            <div class="w-full mt-3 flex justify-between text-[9px] text-gold/80 font-mono z-10 font-semibold">
-                                <span>-30m</span><span>-15m</span><span class="text-white">Radix</span><span>+15m</span><span>+30m</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- VIEW: MUNDIAL & LOCAL SPACE -->
-            <section id="view-mundial" class="view-section">
-                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="globe" class="w-6 h-6 text-emerald-400"></i> Astrologia Mundial</h2>
-                <div class="glass-panel p-6 mb-10">
-                    <div class="flex gap-3 mb-6 items-end">
-                        <div class="space-y-1"><label class="text-[10px] font-bold text-gold/80 uppercase tracking-widest">Ano Base</label><input type="number" id="mundial-year" value="2025" class="glass-input p-2 rounded text-center font-mono w-20 text-sm"></div>
-                        <button id="btn-mundial" class="btn-gold px-5 py-2 rounded h-[34px] text-xs flex items-center gap-2"><i data-lucide="cpu" class="w-3 h-3"></i> Gerar Matriz Anual</button>
-                    </div>
-                    <div class="overflow-x-auto rounded border border-white/10">
-                        <table class="w-full text-center text-xs whitespace-nowrap">
-                            <thead class="bg-black/70 text-gold uppercase tracking-widest text-[9px]">
-                                <tr><th class="p-3 border-r border-white/5">Mês</th><th class="p-3 border-r border-white/5">Júpiter ♃ x Saturno ♄</th><th class="p-3 border-r border-white/5">Júpiter ♃ x Urano ♅</th><th class="p-3">Saturno ♄ x Urano ♅</th></tr>
-                            </thead>
-                            <tbody id="mundial-grid" class="divide-y divide-white/5 font-mono bg-black/20">
-                                <tr><td colspan="4" class="p-6 text-textMuted italic">Clique em Gerar Matriz.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <section id="view-localspace" class="view-section">
-                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="compass" class="w-6 h-6 text-blue-400"></i> Bússola Vetorial (Local Space)</h2>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-10">
-                    <div class="glass-panel p-6 text-center flex flex-col items-center">
-                        <button id="btn-localspace" class="btn-gold px-6 py-2 rounded mb-6 text-xs flex items-center gap-2"><i data-lucide="map-pin" class="w-3 h-3"></i> Projetar Azimutes</button>
-                        <div class="relative w-[260px] h-[260px] rounded-full border-4 border-gold/30 bg-black/60 flex items-center justify-center">
-                            <div class="absolute w-full h-[1px] bg-white/10"></div><div class="absolute h-full w-[1px] bg-white/10"></div>
-                            <div class="absolute top-2 text-red-500 font-bold text-[10px]">N</div><div class="absolute bottom-2 text-white font-bold text-[10px]">S</div><div class="absolute right-2 text-white font-bold text-[10px]">L</div><div class="absolute left-2 text-white font-bold text-[10px]">O</div>
-                            <div id="localspace-compass" class="w-full h-full relative"></div>
-                        </div>
-                    </div>
-                    <div class="glass-panel p-6 flex flex-col">
-                        <table class="w-full text-left text-xs whitespace-nowrap bg-black/20 rounded border border-white/10">
-                            <thead class="text-gold text-[9px] uppercase tracking-widest border-b border-white/10"><tr><th class="p-2">Corpo Celeste</th><th class="p-2 text-right">Azimute</th><th class="p-2 text-center">Bússola</th></tr></thead>
-                            <tbody id="localspace-table" class="divide-y divide-white/5 font-mono text-textMuted"><tr><td colspan="3" class="p-4 text-center italic">Projete os azimutes.</td></tr></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- VIEW: TABELAS BELEZA -->
-            <section id="view-tables" class="view-section">
-                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="scissors" class="w-6 h-6 text-pink-400"></i> Tabelas Estéticas (Ciclo Astronómico)</h2>
-                <div class="glass-panel p-6 mb-10">
-                    <button id="btn-calc-beauty" class="btn-gold px-6 py-2 rounded mb-6 text-xs flex items-center gap-2"><i data-lucide="calendar" class="w-3 h-3"></i> Extrair Próximos 30 Dias</button>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="p-5 border border-emerald-500/30 bg-emerald-500/5 rounded">
-                            <h4 class="text-emerald-400 font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> Cabelo (Crescimento)</h4>
-                            <ul id="tab-corte" class="text-xs text-white font-mono space-y-2 list-disc pl-4"><li class="text-textMuted italic">Aguardando...</li></ul>
-                        </div>
-                        <div class="p-5 border border-blue-500/30 bg-blue-500/5 rounded">
-                            <h4 class="text-blue-400 font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="droplet" class="w-4 h-4"></i> Depilação (Inibição)</h4>
-                            <ul id="tab-depil" class="text-xs text-white font-mono space-y-2 list-disc pl-4"><li class="text-textMuted italic">Aguardando...</li></ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- VIEW: DB CLIENTES (M14) -->
+            <!-- MÓDULO 6: BANCO DE DADOS EM NUVEM (Firebase Firestore) -->
             <section id="view-clients" class="view-section">
-                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="database" class="w-6 h-6 text-purple"></i> Arquivo de Mapas (Local)</h2>
+                <!-- NOVIDADE: Sistema robusto conectado via internet salva dados com segurança e campos customizados de Foto e Notas -->
+                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="database" class="w-6 h-6 text-purple"></i> Banco de Dados (Cloud)</h2>
                 <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 pb-10">
+                    
+                    <!-- Ficha de Cliente / Prontuário -->
                     <div class="xl:col-span-7 glass-panel p-5 flex flex-col">
                         <div class="flex justify-between items-center mb-4 border-b border-gold/20 pb-2">
-                            <h3 class="text-gold font-bold text-sm">Ficha Técnica</h3>
-                            <button type="button" id="btn-db-clear" class="text-[10px] text-white/60 hover:text-white bg-white/5 px-3 py-1.5 rounded"><i data-lucide="file-plus" class="w-3 h-3 inline mr-1"></i> Nova Ficha</button>
+                            <h3 class="text-gold font-bold text-sm">Ficha do Cliente</h3>
+                            <!-- Limpa os dados do formulário atual para um novo cadastro -->
+                            <button type="button" id="btn-db-clear" class="text-[10px] text-white/60 hover:text-white bg-white/5 px-3 py-1.5 rounded"><i data-lucide="file-plus" class="w-3 h-3 inline mr-1"></i> Limpar Formulário</button>
                         </div>
+                        
                         <form id="db-client-form" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                            <input type="hidden" id="db-id">
+                            <input type="hidden" id="db-id"> <!-- ID invisível rastreia documento Cloud -->
+                            
                             <div class="sm:col-span-2 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Nome Completo</label><input type="text" id="db-name" required class="w-full glass-input p-2 rounded text-xs"></div>
-                            <div class="sm:col-span-2 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Identificador</label><input type="text" id="db-group" class="w-full glass-input p-2 rounded text-xs"></div>
+                            <div class="sm:col-span-2 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Identificador/Grupo</label><input type="text" id="db-group" class="w-full glass-input p-2 rounded text-xs"></div>
+                            
                             <div class="sm:col-span-2 md:col-span-1 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Data</label><input type="date" id="db-date" required class="w-full glass-input p-2 rounded font-mono text-[10px]"></div>
                             <div class="sm:col-span-2 md:col-span-1 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Hora</label><input type="time" step="1" id="db-time" required class="w-full glass-input p-2 rounded font-mono text-[10px]"></div>
-                            <div class="sm:col-span-4 md:col-span-2 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Local</label><input type="text" id="db-city" class="w-full glass-input p-2 rounded text-xs"></div>
-                            <div class="sm:col-span-2 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Lat (Dec)</label><input type="number" step="0.001" id="db-lat" class="w-full glass-input p-2 rounded font-mono text-[10px] text-center"></div>
-                            <div class="sm:col-span-2 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Lng (Dec)</label><input type="number" step="0.001" id="db-lng" class="w-full glass-input p-2 rounded font-mono text-[10px] text-center"></div>
-                            <div class="col-span-4 space-y-1 mt-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Notas e Histórico</label><textarea id="db-notes" rows="3" class="w-full glass-input p-2 rounded text-xs text-textMuted"></textarea></div>
+                            <div class="sm:col-span-4 md:col-span-2 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Fuso (TZ)</label><input type="number" step="0.5" id="db-tz" class="w-full glass-input p-2 rounded text-[10px] font-mono"></div>
+
+                            <div class="sm:col-span-4 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Local</label><input type="text" id="db-city" class="w-full glass-input p-2 rounded text-xs"></div>
+                            <div class="sm:col-span-2 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Lat (Dec)</label><input type="number" step="0.0001" id="db-lat" class="w-full glass-input p-2 rounded font-mono text-[10px] text-center"></div>
+                            <div class="sm:col-span-2 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Lng (Dec)</label><input type="number" step="0.0001" id="db-lng" class="w-full glass-input p-2 rounded font-mono text-[10px] text-center"></div>
+                            
+                            <!-- NOVIDADE: Adicionado os campos novos pedidos: Foto (Documento) e Notas longas do Prontuário -->
+                            <div class="col-span-4 space-y-1 mt-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">URL de Foto (Documento/Pessoa)</label><input type="url" id="db-photoUrl" class="w-full glass-input p-2 rounded text-xs text-textMuted" placeholder="https://..."></div>
+                            <div class="col-span-4 space-y-1"><label class="text-[9px] font-bold text-gold/80 uppercase tracking-widest">Notas e Histórico</label><textarea id="db-notes" rows="3" class="w-full glass-input p-2 rounded text-xs text-textMuted"></textarea></div>
+                            
                             <div class="col-span-4 flex justify-between mt-3 pt-4 border-t border-white/10">
-                                <button type="button" id="btn-db-delete" class="px-4 py-2 text-red-400 border border-red-500/30 rounded hover:bg-red-500/10 text-[11px] font-medium"><i data-lucide="trash-2" class="w-3 h-3 inline"></i> Excluir</button>
-                                <button type="submit" class="btn-gold px-6 py-2 rounded shadow text-xs"><i data-lucide="save" class="w-3 h-3 inline"></i> Gravar</button>
+                                <!-- Botões Gravam no Firebase remotamente -->
+                                <button type="button" id="btn-db-delete" class="px-4 py-2 text-red-400 border border-red-500/30 rounded hover:bg-red-500/10 text-[11px] font-medium disabled:opacity-50"><i data-lucide="trash-2" class="w-3 h-3 inline"></i> Excluir Nuvem</button>
+                                <button type="submit" id="btn-db-save" class="btn-gold px-6 py-2 rounded shadow text-xs"><i data-lucide="cloud-upload" class="w-3 h-3 inline"></i> Salvar na Nuvem</button>
                             </div>
                         </form>
                     </div>
+
+                    <!-- Navegador de Clientes da Nuvem -->
                     <div class="xl:col-span-5 glass-panel p-5 flex flex-col">
                         <div class="flex items-center justify-between mb-4 border-b border-gold/20 pb-3">
-                            <span class="text-[10px] text-textMuted font-bold uppercase tracking-widest">Navegador</span>
-                            <div class="flex gap-1 bg-black/50 p-1 rounded">
-                                <button id="db-nav-first" class="p-1 hover:bg-white/10 text-gold rounded"><i data-lucide="chevrons-left" class="w-4 h-4"></i></button>
-                                <button id="db-nav-prev" class="p-1 hover:bg-white/10 text-gold rounded"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                                <span id="db-counter" class="w-12 text-center font-mono text-[10px] text-white">0 / 0</span>
-                                <button id="db-nav-next" class="p-1 hover:bg-white/10 text-gold rounded"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
-                                <button id="db-nav-last" class="p-1 hover:bg-white/10 text-gold rounded"><i data-lucide="chevrons-right" class="w-4 h-4"></i></button>
-                            </div>
+                            <span class="text-[10px] text-textMuted font-bold uppercase tracking-widest">Navegador em Nuvem</span>
                         </div>
-                        <input type="text" id="db-search" placeholder="Pesquisar..." class="w-full glass-input p-2 rounded text-xs mb-3 bg-black/40">
-                        <div id="db-list-container" class="flex-1 overflow-y-auto divide-y divide-white/5 bg-black/20 rounded border border-white/5 min-h-[200px]"></div>
-                        <button type="button" id="btn-calc-client" class="w-full mt-3 bg-purple-dark hover:bg-purple text-white font-bold py-2 rounded text-xs"><i data-lucide="arrow-up-right" class="inline w-3 h-3"></i> Carregar no Radix</button>
+                        <!-- Pesquisa Local no Cache Sincronizado Firebase -->
+                        <input type="text" id="db-search" placeholder="Pesquisar por nome..." class="w-full glass-input p-2 rounded text-xs mb-3 bg-black/40">
+                        <div id="db-list-container" class="flex-1 overflow-y-auto divide-y divide-white/5 bg-black/20 rounded border border-white/5 min-h-[200px]">
+                            <div class="p-4 text-center text-textMuted text-xs italic">Sincronizando...</div>
+                        </div>
+                        <!-- Transfere a ficha pra calculadora Natal -->
+                        <button type="button" id="btn-calc-client" class="w-full mt-3 bg-purple-dark hover:bg-purple text-white font-bold py-2 rounded text-xs transition-colors disabled:opacity-50"><i data-lucide="arrow-up-right" class="inline w-3 h-3"></i> Carregar no Mapa Natal</button>
                     </div>
                 </div>
             </section>
 
-            <!-- VIEW: CONFIGURAÇÕES -->
+            <!-- MÓDULO 7: CONFIGURAÇÕES E PARÂMETROS -->
             <section id="view-settings" class="view-section">
-                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="settings" class="w-6 h-6 text-gray-400"></i> Configurações (M13)</h2>
+                <h2 class="font-cinzel text-2xl text-gold mb-6 flex items-center gap-2"><i data-lucide="settings" class="w-6 h-6 text-gray-400"></i> Configurações do Motor</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-10">
                     <div class="glass-panel p-6 space-y-6">
-                        <div>
-                            <h3 class="text-white font-bold text-sm border-b border-gold/20 pb-2 mb-3">Órbitas Radix (Graus)</h3>
-                            <div class="grid grid-cols-2 gap-3 text-xs">
-                                <div class="flex justify-between items-center bg-black/30 p-2 rounded border border-white/5"><span class="text-textMuted">Conjunção ☌</span> <input type="number" id="cfg-orb-con" class="w-10 glass-input p-1 text-center rounded font-mono"></div>
-                                <div class="flex justify-between items-center bg-black/30 p-2 rounded border border-white/5"><span class="text-textMuted">Oposição ☍</span> <input type="number" id="cfg-orb-opp" class="w-10 glass-input p-1 text-center rounded font-mono"></div>
-                                <div class="flex justify-between items-center bg-black/30 p-2 rounded border border-white/5"><span class="text-textMuted">Trígono △</span> <input type="number" id="cfg-orb-tri" class="w-10 glass-input p-1 text-center rounded font-mono"></div>
-                                <div class="flex justify-between items-center bg-black/30 p-2 rounded border border-white/5"><span class="text-textMuted">Quadratura □</span> <input type="number" id="cfg-orb-sqr" class="w-10 glass-input p-1 text-center rounded font-mono"></div>
-                            </div>
-                        </div>
                         <div>
                             <h3 class="text-white font-bold text-sm border-b border-gold/20 pb-2 mb-3">Algoritmos</h3>
                             <div class="space-y-2">
                                 <div class="flex justify-between items-center text-xs bg-black/30 p-2.5 rounded border border-white/5">
                                     <span class="text-textMuted">Domificação:</span>
+                                    <!-- Você escolheu Placidus como padrão -->
                                     <select id="cfg-houses" class="glass-input p-1 rounded text-[9px] font-bold uppercase text-gold outline-none"><option value="placidus">Placidus</option><option value="porphyry">Porfírio</option><option value="equal">Signo Inteiro</option></select>
-                                </div>
-                                <div class="flex justify-between items-center text-xs bg-black/30 p-2.5 rounded border border-white/5">
-                                    <span class="text-textMuted">Plutão (UI):</span>
-                                    <select id="cfg-pluto" class="glass-input p-1 rounded text-xs font-bold outline-none"><option value="♇">♇</option><option value="⯓">⯓</option></select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="glass-panel p-6">
-                        <h3 class="text-white font-bold text-sm border-b border-gold/20 pb-2 mb-4">Domicílios</h3>
-                        <div id="cfg-dignities-grid" class="grid grid-cols-2 gap-3 text-[10px] font-mono text-textMuted"></div>
+                        <h3 class="text-white font-bold text-sm border-b border-gold/20 pb-2 mb-4">Órbitas Aspectos (Graus)</h3>
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div class="flex justify-between items-center bg-black/30 p-2 rounded border border-white/5"><span class="text-textMuted">Conjunção ☌</span> <input type="number" id="cfg-orb-con" class="w-10 glass-input p-1 text-center rounded font-mono"></div>
+                            <div class="flex justify-between items-center bg-black/30 p-2 rounded border border-white/5"><span class="text-textMuted">Oposição ☍</span> <input type="number" id="cfg-orb-opp" class="w-10 glass-input p-1 text-center rounded font-mono"></div>
+                            <div class="flex justify-between items-center bg-black/30 p-2 rounded border border-white/5"><span class="text-textMuted">Trígono △</span> <input type="number" id="cfg-orb-tri" class="w-10 glass-input p-1 text-center rounded font-mono"></div>
+                            <div class="flex justify-between items-center bg-black/30 p-2 rounded border border-white/5"><span class="text-textMuted">Quadratura □</span> <input type="number" id="cfg-orb-sqr" class="w-10 glass-input p-1 text-center rounded font-mono"></div>
+                        </div>
                     </div>
-                    <div class="md:col-span-2 flex justify-end"><button id="btn-save-settings" class="btn-gold px-8 py-2.5 rounded text-xs"><i data-lucide="save" class="w-3 h-3 inline"></i> Gravar Configurações</button></div>
+                    <!-- Configurações também ficam gravadas em Nuvem na conta do usuário -->
+                    <div class="md:col-span-2 flex justify-end"><button id="btn-save-settings" class="btn-gold px-8 py-2.5 rounded text-xs"><i data-lucide="cloud-upload" class="w-3 h-3 inline"></i> Salvar Preferências na Nuvem</button></div>
                 </div>
             </section>
         </div>
     </main>
 
+    <!-- Componente Toast (Notificações Flutuantes no canto Inferior Direito) -->
     <div id="toast" class="toast text-xs font-medium text-white flex items-center gap-2">
         <i data-lucide="info" class="w-4 h-4 text-gold shrink-0"></i><span id="toast-msg"></span>
     </div>
 
+    <!-- ===== JS MÓDULO PRINCIPAL ===== -->
     <script type="module">
+        // Importações Modulares Nativas do Firebase versão 11
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Variáveis de ambiente injetadas pelo container do sistema (App ID para o Firestore)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'astroweb-pro-local';
+        let firebaseConfig = {};
+        try { firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}'); } catch(e) {}
+
+        // Estado do App Firebase
+        let app, db, auth, userId = null;
+        let isOnline = false;
+
+        // Inicializa o Firebase apenas se as credenciais existirem
+        if (Object.keys(firebaseConfig).length > 0) {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        }
+
+        // NOVIDADE: Atualiza interface (Luz verde/vermelha) indicando se DB Firebase foi conectado
+        function updateCloudStatus(status, text) {
+            const el = document.getElementById('cloud-status');
+            const icon = document.getElementById('cloud-icon');
+            const tEl = document.getElementById('cloud-text');
+            if(!el) return;
+            
+            if(status === 'connected') {
+                el.className = 'hidden sm:flex items-center gap-1.5 text-[11px] bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded border border-emerald-500/20 font-mono';
+                icon.setAttribute('data-lucide', 'cloud');
+                tEl.textContent = text || 'Nuvem Conectada';
+                isOnline = true;
+            } else {
+                el.className = 'hidden sm:flex items-center gap-1.5 text-[11px] bg-red-500/10 text-red-400 px-3 py-1 rounded border border-red-500/20 font-mono';
+                icon.setAttribute('data-lucide', 'cloud-off');
+                tEl.textContent = text || 'Offline';
+                isOnline = false;
+            }
+            
+            // Failsafe: Remove o painel de loading de qualquer forma pra não prender usuário
+            const overlay = document.getElementById('auth-overlay');
+            if(overlay && overlay.style.display !== 'none') {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 500);
+            }
+            
+            lucide.createIcons();
+        }
+
+        // NOVIDADE: Regra rígida do Firestore: Sempre chama a autorização Custom Token/Anonymous antes de Query.
+        async function initAuth() {
+            if(!auth) {
+                updateCloudStatus('error', 'Sem Conf. DB');
+                return;
+            }
+            
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth); // Fallback para dev local
+                }
+                
+                // Observador que dispara as leituras de Banco apenas quando temos "User ID" seguro
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        updateCloudStatus('connected', 'Sincronizado');
+                        loadCloudSettings(); // Puxa configurações guardadas
+                        subscribeToClients(); // Escuta banco de Fichas (Prontuário) em tempo real
+                    }
+                });
+            } catch (err) {
+                console.error("Auth falhou:", err);
+                updateCloudStatus('error', 'Erro Auth');
+                document.getElementById('auth-overlay').style.display = 'none';
+            }
+        }
+
         // ==========================================
-        // 1. UTILIDADES E CONSTANTES MATEMÁTICAS
+        // UTILS MATEMÁTICA ASTROLÓGICA (KEPLER BASE)
         // ==========================================
         const D2R = Math.PI / 180;
         const R2D = 180 / Math.PI;
+        // Função universal para corrigir anomalias acima de 360° em elipses astrológicas
         const normalize = a => (a % 360 + 360) % 360;
         const degToDms = deg => `${Math.floor(deg)}° ${Math.floor((deg % 1)*60).toString().padStart(2,'0')}'`;
 
+        // Dicionários para Rendering e Signos (Aparência, Cores e Simbologia Exata)
         const ZODIAC = [
             { name: 'Áries', sym: '♈', color: '#EF4444' }, { name: 'Touro', sym: '♉', color: '#10B981' },
             { name: 'Gêmeos', sym: '♊', color: '#F59E0B' }, { name: 'Câncer', sym: '♋', color: '#3B82F6' },
@@ -674,69 +653,61 @@
             { name: 'Aquário', sym: '♒', color: '#F59E0B' }, { name: 'Peixes', sym: '♓', color: '#3B82F6' }
         ];
 
+        // NOVIDADE: Excluímos Netuno e Plutão para Módulo de Revoluções a seu pedido, mas precisamos para Natal
         const PLANETS_BASE = [
             { id: 'sun', name: 'Sol', sym: '☉', color: '#D4AF37' }, { id: 'moon', name: 'Lua', sym: '☽', color: '#F3F4F6' },
             { id: 'mercury', name: 'Mercúrio', sym: '☿', color: '#10B981' }, { id: 'venus', name: 'Vênus', sym: '♀', color: '#EC4899' },
             { id: 'mars', name: 'Marte', sym: '♂', color: '#EF4444' }, { id: 'jupiter', name: 'Júpiter', sym: '♃', color: '#8B5CF6' },
-            { id: 'saturn', name: 'Saturno', sym: '♄', color: '#9CA3AF' }, { id: 'uranus', name: 'Urano', sym: '♅', color: '#06B6D4' },
+            { id: 'saturn', name: 'Saturno', sym: '♄', color: '#9CA3AF' }, { id: 'uranus', name: 'Urano', sym: '♅', color: '#06B6D4' }
+        ]; 
+        
+        const ALL_PLANETS = [
+             ...PLANETS_BASE,
             { id: 'neptune', name: 'Netuno', sym: '♆', color: '#3B82F6' }, { id: 'pluto', name: 'Plutão', sym: '♇', color: '#A78BFA' },
             { id: 'node', name: 'Nodo Norte', sym: '☊', color: '#FFFFFF' }
         ];
 
-        // Dicionário de Cidades Exaustivo do Brasil (Capitais) + Globais
+        // Dicionário Estático do Atlas Global p/ Auxiliar (quando usuário não souber lat/lng manuais)
         const CITIES_DB = [
-            { name: 'Rio Branco', state: 'AC', country: 'Brasil', lat: -9.974, lng: -67.807, tz: -5 },
-            { name: 'Maceió', state: 'AL', country: 'Brasil', lat: -9.665, lng: -35.735, tz: -3 },
-            { name: 'Macapá', state: 'AP', country: 'Brasil', lat: 0.034, lng: -51.066, tz: -3 },
-            { name: 'Manaus', state: 'AM', country: 'Brasil', lat: -3.101, lng: -60.025, tz: -4 },
-            { name: 'Salvador', state: 'BA', country: 'Brasil', lat: -12.971, lng: -38.510, tz: -3 },
-            { name: 'Fortaleza', state: 'CE', country: 'Brasil', lat: -3.717, lng: -38.543, tz: -3 },
-            { name: 'Brasília', state: 'DF', country: 'Brasil', lat: -15.780, lng: -47.929, tz: -3 },
-            { name: 'Vitória', state: 'ES', country: 'Brasil', lat: -20.315, lng: -40.312, tz: -3 },
-            { name: 'Goiânia', state: 'GO', country: 'Brasil', lat: -16.686, lng: -49.264, tz: -3 },
-            { name: 'São Luís', state: 'MA', country: 'Brasil', lat: -2.529, lng: -44.302, tz: -3 },
-            { name: 'Cuiabá', state: 'MT', country: 'Brasil', lat: -15.596, lng: -56.096, tz: -4 },
-            { name: 'Campo Grande', state: 'MS', country: 'Brasil', lat: -20.442, lng: -54.646, tz: -4 },
-            { name: 'Belo Horizonte', state: 'MG', country: 'Brasil', lat: -19.920, lng: -43.937, tz: -3 },
-            { name: 'Belém', state: 'PA', country: 'Brasil', lat: -1.455, lng: -48.502, tz: -3 },
-            { name: 'João Pessoa', state: 'PB', country: 'Brasil', lat: -7.115, lng: -34.863, tz: -3 },
-            { name: 'Curitiba', state: 'PR', country: 'Brasil', lat: -25.428, lng: -49.273, tz: -3 },
-            { name: 'Recife', state: 'PE', country: 'Brasil', lat: -8.052, lng: -34.928, tz: -3 },
-            { name: 'Teresina', state: 'PI', country: 'Brasil', lat: -5.089, lng: -42.801, tz: -3 },
-            { name: 'Rio de Janeiro', state: 'RJ', country: 'Brasil', lat: -22.906, lng: -43.172, tz: -3 },
-            { name: 'Natal', state: 'RN', country: 'Brasil', lat: -5.794, lng: -35.211, tz: -3 },
-            { name: 'Porto Alegre', state: 'RS', country: 'Brasil', lat: -30.034, lng: -51.228, tz: -3 },
-            { name: 'Porto Velho', state: 'RO', country: 'Brasil', lat: -8.761, lng: -63.903, tz: -4 },
-            { name: 'Boa Vista', state: 'RR', country: 'Brasil', lat: -2.823, lng: -60.675, tz: -4 },
-            { name: 'Florianópolis', state: 'SC', country: 'Brasil', lat: -27.595, lng: -48.548, tz: -3 },
-            { name: 'São Paulo', state: 'SP', country: 'Brasil', lat: -23.5505, lng: -46.6333, tz: -3 },
-            { name: 'Aracaju', state: 'SE', country: 'Brasil', lat: -10.947, lng: -37.073, tz: -3 },
-            { name: 'Palmas', state: 'TO', country: 'Brasil', lat: -8.324, lng: -48.333, tz: -3 },
-            { name: 'Lisboa', state: 'PT', country: 'Portugal', lat: 38.7223, lng: -9.1393, tz: 0 },
-            { name: 'Porto', state: 'PT', country: 'Portugal', lat: 41.1579, lng: -8.6291, tz: 0 },
-            { name: 'Nova Iorque', state: 'NY', country: 'EUA', lat: 40.7128, lng: -74.0060, tz: -5 },
-            { name: 'Londres', state: 'LND', country: 'Reino Unido', lat: 51.5074, lng: -0.1278, tz: 0 }
+            { name: 'Rio Branco', state: 'AC', lat: -9.974, lng: -67.807, tz: -5 },
+            { name: 'Maceió', state: 'AL', lat: -9.665, lng: -35.735, tz: -3 },
+            { name: 'Manaus', state: 'AM', lat: -3.101, lng: -60.025, tz: -4 },
+            { name: 'Salvador', state: 'BA', lat: -12.971, lng: -38.510, tz: -3 },
+            { name: 'Fortaleza', state: 'CE', lat: -3.717, lng: -38.543, tz: -3 },
+            { name: 'Brasília', state: 'DF', lat: -15.780, lng: -47.929, tz: -3 },
+            { name: 'Vitória', state: 'ES', lat: -20.315, lng: -40.312, tz: -3 },
+            { name: 'Goiânia', state: 'GO', lat: -16.686, lng: -49.264, tz: -3 },
+            { name: 'São Luís', state: 'MA', lat: -2.529, lng: -44.302, tz: -3 },
+            { name: 'Cuiabá', state: 'MT', lat: -15.596, lng: -56.096, tz: -4 },
+            { name: 'Campo Grande', state: 'MS', lat: -20.442, lng: -54.646, tz: -4 },
+            { name: 'Belo Horizonte', state: 'MG', lat: -19.920, lng: -43.937, tz: -3 },
+            { name: 'Belém', state: 'PA', lat: -1.455, lng: -48.502, tz: -3 },
+            { name: 'Curitiba', state: 'PR', lat: -25.428, lng: -49.273, tz: -3 },
+            { name: 'Recife', state: 'PE', lat: -8.052, lng: -34.928, tz: -3 },
+            { name: 'Rio de Janeiro', state: 'RJ', lat: -22.906, lng: -43.172, tz: -3 },
+            { name: 'Porto Alegre', state: 'RS', lat: -30.034, lng: -51.228, tz: -3 },
+            { name: 'Florianópolis', state: 'SC', lat: -27.595, lng: -48.548, tz: -3 },
+            { name: 'São Paulo', state: 'SP', lat: -23.5505, lng: -46.6333, tz: -3 },
+            { name: 'Lisboa', state: 'PT', lat: 38.7223, lng: -9.1393, tz: 0 },
+            { name: 'Paris', state: 'FR', lat: 48.8566, lng: 2.3522, tz: +1 },
+            { name: 'Nova Iorq  ue', state: 'NY', lat: 40.7128, lng: -74.0060, tz: -5 }
         ];
 
-        let storedClients = [];
-        let storedSettings = { orbits: { con: 8, opp: 8, tri: 7, sqr: 7 }, houses: "placidus", pluto: "♇" };
-        try {
-            const lc = localStorage.getItem('pegasus_clients'); if (lc) storedClients = JSON.parse(lc);
-            const ls = localStorage.getItem('pegasus_settings'); if (ls) storedSettings = JSON.parse(ls);
-        } catch (e) { console.warn("LocalStorage access failed."); }
+        // Estado do App (Gerenciamento Global em Memória para renderizações fluidas)
+        let STATE = { clients: [], settings: { orbits: { con: 8, opp: 8, tri: 7, sqr: 7 }, houses: "placidus" }, activeChart: null };
 
-        const STATE = { clients: storedClients, settings: storedSettings, activeChart: null, currentIdx: -1, rectFacts: [] };
-
+        // Toast: Função Auxiliar de Notificações
         function showToast(msg) {
             const t = document.getElementById('toast'); if(!t) return;
             document.getElementById('toast-msg').innerHTML = msg; 
             t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500);
         }
 
-        // ==========================================
-        // 2. ENGINE ASTROLÓGICA E PLÁCIDO (KEPLER)
-        // ==========================================
-        
+        /**
+         * Algoritmo de Conversão de Calendário Gregoriano para Dia Juliano
+         * O Dia Juliano é um número longo usado por motores Keplerianos para simplificar matemática orbital,
+         * tratando o tempo como um contínuo sem meses irregulares ou anos bissextos.
+         */
         function getJD(dateStr, timeStr, tzOffset = 0) {
             const [y, m, d] = dateStr.split('-').map(Number);
             const [h, mn, s = 0] = timeStr.split(':').map(Number);
@@ -745,45 +716,83 @@
             let B = (aY > 1582 || (aY === 1582 && m >= 10)) ? 2 - A + Math.floor(A / 4) : 0;
             let mo = m, yr = aY; if (mo <= 2) { yr -= 1; mo += 12; }
             
-            const UT = h - tzOffset + (mn / 60) + (s / 3600); // Segundos exatos incluídos
+            const UT = h - tzOffset + (mn / 60) + (s / 3600);
             return Math.floor(365.25 * (yr + 4716)) + Math.floor(30.6001 * (mo + 1)) + d + UT / 24 + B - 1524.5;
         }
 
+        // NOVIDADE: A função inversa, que retorna Dia Juliano de volta para Data Humanizada String.
+        // Necessário para mostrarmos "Momento Exato da Revolução" na interface visual.
+        function JDToDate(jd, tzOffset) {
+            let Z = Math.floor(jd + 0.5);
+            let F = (jd + 0.5) - Z;
+            let A = Z;
+            if (Z >= 2299161) {
+                let alpha = Math.floor((Z - 1867216.25) / 36524.25);
+                A = Z + 1 + alpha - Math.floor(alpha / 4);
+            }
+            let B = A + 1524;
+            let C = Math.floor((B - 122.1) / 365.25);
+            let D = Math.floor(365.25 * C);
+            let E = Math.floor((B - D) / 30.6001);
+            let day = B - D - Math.floor(30.6001 * E) + F;
+            let month = (E < 14) ? E - 1 : E - 13;
+            let year = (month > 2) ? C - 4716 : C - 4715;
+
+            let hoursUT = (day - Math.floor(day)) * 24;
+            let localHours = hoursUT + tzOffset;
+            
+            if(localHours >= 24) { localHours -= 24; day += 1; } 
+            if(localHours < 0) { localHours += 24; day -= 1; }
+
+            let h = Math.floor(localHours);
+            let m = Math.floor((localHours - h) * 60);
+            
+            return `${Math.floor(day).toString().padStart(2,'0')}/${month.toString().padStart(2,'0')}/${year} às ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+        }
+
+        /**
+         * Calcula Longitude de todos os Corpos Celestes a partir de um dado Dia Juliano.
+         * Usa sub-fórmulas do Algoritmo de Meeus.
+         */
         function calcPlanets(jd) {
             const t = (jd - 2451545.0) / 36525;
-            return PLANETS_BASE.map((p, i) => {
+            return ALL_PLANETS.map((p, i) => {
                 let lon = 0;
-                if (p.id === 'node') {
-                    lon = normalize(125.0445 - 1934.136261 * t);
-                } else if (p.id === 'moon') {
-                    // Meeus Lua Complexa
+                if (p.id === 'node') { lon = normalize(125.0445 - 1934.136261 * t); } 
+                else if (p.id === 'moon') {
+                    // Meeus para Lua (Considera Perturbações, Excentricidade e Anomalia Média).
                     let Lp = normalize(218.316 + 481267.881 * t);
                     let D = normalize(297.850 + 445267.111 * t);
                     let M = normalize(357.529 + 35999.050 * t);
                     let Mp = normalize(134.963 + 477198.867 * t);
                     let F = normalize(93.272 + 483202.017 * t);
-                    lon = normalize(Lp + 6.289 * Math.sin(Mp*D2R) + 1.274 * Math.sin((2*D - Mp)*D2R) + 0.658 * Math.sin((2*D)*D2R) + 0.214 * Math.sin((2*Mp)*D2R) - 0.186 * Math.sin(M*D2R) - 0.114 * Math.sin((2*F)*D2R));
-                } else if (p.id === 'sun') {
+                    lon = normalize(Lp + 6.289 * Math.sin(Mp*D2R) + 1.274 * Math.sin((2*D - Mp)*D2R) + 0.658 * Math.sin((2*D)*D2R) + 0.214 * Math.sin((2*Mp)*D2R) - 0.186 * Math.sin(M*D2R));
+                } 
+                else if (p.id === 'sun') {
+                    // Meeus Simplificado para Sol
                     let M = normalize(357.529 + 35999.050 * t);
                     let C = (1.914 - 0.0048*t) * Math.sin(M*D2R) + 0.020 * Math.sin(2*M*D2R);
                     lon = normalize(280.466 + 36000.770 * t + C);
                 } else {
-                    const base = [0,0, 252.2, 181.9, 355.4, 34.4, 50.1, 314.0, 304.3, 238.9][i];
-                    const speed = [0,0, 149472.6, 58517.8, 19140.3, 3034.9, 1222.1, 428.5, 218.5, 145.2][i];
-                    // A retrogradação visual foi programada numa função 3D, mas aqui mantemos o 2D por performance browser,
-                    // injetando a Excentricidade básica para Urano, Netuno e Plutão para simular o "stop"
+                    // Outros corpos: Translação Uniforme sobre a base da época
+                    const base = [0,0, 252.2, 181.9, 355.4, 34.4, 50.1, 314.0, 304.3, 238.9, 0][i];
+                    const speed = [0,0, 149472.6, 58517.8, 19140.3, 3034.9, 1222.1, 428.5, 218.5, 145.2, 0][i];
                     lon = normalize(base + speed * t);
                 }
-                return { ...p, sym: p.id==='pluto' ? STATE.settings.pluto : p.sym, longitude: lon, sign: ZODIAC[Math.floor(lon / 30)], deg: lon % 30 };
+                // Retorna objeto final, associando também o signo correspondente em que caiu.
+                return { ...p, longitude: lon, sign: ZODIAC[Math.floor(lon / 30)], deg: lon % 30 };
             });
         }
 
-        // Sistema de Casas PLÁCIDO Iterativo Integrado
+        /**
+         * Algoritmo de Casas e Ângulos (Ascendente/MC).
+         * NOVIDADE: Usa PLACIDUS (default) de forma Iterativa. Este cálculo repete a si mesmo
+         * matematicamente em loop até convergir na posição da Casa intermediária na abóbada celeste.
+         */
         function calcHouses(jd, lat, lng, system) {
             const T = (jd - 2451545.0) / 36525;
             const gmst = 280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T;
             const lst = normalize(gmst + lng);
-
             const ramc = lst * D2R, e = 23.439 * D2R, latR = lat * D2R;
             
             let mc = Math.atan2(Math.tan(ramc), Math.cos(e)) * R2D;
@@ -796,13 +805,16 @@
             let cusps = new Array(12);
             cusps[0] = asc; cusps[9] = mc; cusps[3] = normalize(mc + 180); cusps[6] = normalize(asc + 180);
 
-            if (system === 'placidus' && Math.abs(lat) < 66) { // Placidus breaks near polar circles
+            // Validação de segurança: Plácidus "quebra" matemático em latitudes próximas ao polo.
+            // Para isso ele usa if math.abs(lat) < 66. Acima disso usamos equal/porphyry localmente.
+            if (system === 'placidus' && Math.abs(lat) < 66) {
                 const calcCusp = (RA, factor) => {
                     let R = RA;
                     for (let iter = 0; iter < 10; iter++) {
                         let dec = Math.asin(Math.sin(e) * Math.sin(R * D2R));
                         let A = Math.asin(Math.tan(latR) * Math.tan(dec));
                         let R_new = normalize(RA + factor * A * R2D);
+                        // Tolerância de fechamento interacional (0.1 grau)
                         if (Math.abs(R_new - R) < 0.1) { R = R_new; break; }
                         R = R_new;
                     }
@@ -811,20 +823,19 @@
                     if (Math.cos(R * D2R) < 0) cusp = normalize(cusp + 180);
                     return cusp;
                 };
+                // Calcula Quadrantes Cúspides usando os terços diurnos/noturnos Placidiano Clássicos
                 cusps[10] = calcCusp(normalize(lst + 30), 1/3); cusps[11] = calcCusp(normalize(lst + 60), 2/3);
                 cusps[1] = calcCusp(normalize(lst + 120), 2/3); cusps[2] = calcCusp(normalize(lst + 150), 1/3);
                 cusps[4] = normalize(cusps[10] + 180); cusps[5] = normalize(cusps[11] + 180);
-            } else if (system === 'porphyry' || Math.abs(lat) >= 66) {
-                const s1 = normalize(cusps[3] - cusps[0]) / 3; cusps[1] = normalize(cusps[0] + s1); cusps[2] = normalize(cusps[1] + s1);
-                const s2 = normalize(cusps[6] - cusps[3]) / 3; cusps[4] = normalize(cusps[3] + s2); cusps[5] = normalize(cusps[4] + s2);
             } else { 
+                // Fallback Signos Inteiros.
                 for(let i=1; i<12; i++) if(![0,3,6,9].includes(i)) cusps[i] = normalize(asc + i*30);
             }
-            
             for(let i=0; i<6; i++) cusps[i+6] = normalize(cusps[i] + 180);
             return { asc, mc, cusps, lst };
         }
 
+        // Calcula Inter-Aspectos Ptolomaicos
         function calcAspects(planets1, planets2 = null) {
             const types = [
                 { name: 'Conjunção', angle: 0, orb: STATE.settings.orbits.con, color: '#D4AF37', sym: '☌' },
@@ -848,14 +859,13 @@
             return found;
         }
 
-        // ==========================================
-        // 3. RENDERIZADOR SVG DA MANDALA
-        // ==========================================
+        // Desenha Mandala SVG. Rotaciona sempre forçando o Ascendente p/ ser o Início Left-Side.
         function drawSVG(data1, data2 = null) {
             if(!data1 || !data1.planets) return '';
             const getA = (lon) => normalize(180 + (data1.asc - lon));
             let svg = `<svg viewBox="0 0 600 600" class="w-full h-full drop-shadow-2xl" preserveAspectRatio="xMidYMid meet">`;
             
+            // Fundo
             svg += `<circle cx="300" cy="300" r="260" fill="#0B0B14" stroke="#D4AF37" stroke-width="2.5" opacity="0.9"/>`;
             svg += `<circle cx="300" cy="300" r="215" fill="none" stroke="rgba(212,175,55,0.4)" stroke-width="1.5"/>`;
             svg += `<circle cx="300" cy="300" r="120" fill="#151525" stroke="rgba(212,175,55,0.6)" stroke-width="2"/>`;
@@ -902,16 +912,13 @@
             return svg + `</svg>`;
         }
 
+        // Eventos Tooltip (Exibir grau exato ao passar mouse em Cima)
         window.showTip = (title, body) => {
             const tip = document.getElementById('mandala-tooltip');
             if(!tip) return;
             tip.innerHTML = `<div class="text-gold font-bold mb-1">${title}</div><div class="text-white text-[11px] font-mono tracking-wider">${body}</div>`;
             tip.classList.remove('hidden');
-            
-            const mouseMoveHandler = (e) => {
-                tip.style.left = (e.pageX + 15) + 'px';
-                tip.style.top = (e.pageY + 15) + 'px';
-            };
+            const mouseMoveHandler = (e) => { tip.style.left = (e.pageX + 15) + 'px'; tip.style.top = (e.pageY + 15) + 'px'; };
             document.addEventListener('mousemove', mouseMoveHandler);
             window.activeTipHandler = mouseMoveHandler;
         };
@@ -921,32 +928,24 @@
             if(window.activeTipHandler) document.removeEventListener('mousemove', window.activeTipHandler);
         };
 
-        // ==========================================
-        // 4. CONTROLADORES E ATLAS
-        // ==========================================
-        
-        // Atlas Autocomplete Dinâmico (Fixed Position for perfect overlap)
+        // Controlador de Autocomplete do Atlas de Cidades.
         const atlasInput = document.getElementById('natal-city');
         const atlasResults = document.getElementById('atlas-results');
-        
         atlasInput?.addEventListener('input', (e) => {
             const val = e.target.value.toLowerCase();
             if(val.length < 2) { atlasResults.style.display = 'none'; return; }
-            
             const matches = CITIES_DB.filter(c => c.name.toLowerCase().includes(val) || c.state.toLowerCase().includes(val));
             if(matches.length > 0) {
                 atlasResults.innerHTML = matches.map(m => `
                     <div class="atlas-item flex flex-col gap-1" onclick="window.selectCity('${m.name}', '${m.state}', ${m.lat}, ${m.lng}, ${m.tz})">
                         <span class="text-white font-bold text-sm tracking-wide">${m.name}, ${m.state}</span>
                         <span class="text-textMuted text-[10px] font-mono border-l-2 border-gold/50 pl-2">Lat: ${m.lat} | Lng: ${m.lng} | Fuso: ${m.tz > 0 ? '+'+m.tz : m.tz}</span>
-                    </div>
-                `).join('');
+                    </div>`).join('');
                 atlasResults.style.display = 'block';
-            } else {
-                atlasResults.style.display = 'none';
-            }
+            } else { atlasResults.style.display = 'none'; }
         });
 
+        // Autocompleta Lat/Lng no form quando Cidade for escolhida na lista.
         window.selectCity = (name, state, lat, lng, tz) => {
             document.getElementById('natal-city').value = `${name}, ${state}`;
             document.getElementById('natal-lat').value = lat;
@@ -955,37 +954,28 @@
             atlasResults.style.display = 'none';
         };
 
-        document.addEventListener('click', (e) => {
-            if(e.target !== atlasInput && e.target !== atlasResults) {
-                if(atlasResults) atlasResults.style.display = 'none';
-            }
-        });
+        // Fecha drop do Atlas.
+        document.addEventListener('click', (e) => { if(e.target !== atlasInput && e.target !== atlasResults && atlasResults) atlasResults.style.display = 'none'; });
 
-        // Mobile Sidebar
+        // Mobile Sidebar & Navigation UI Events
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
-        function toggleMobileMenu() {
-            if(!sidebar || !overlay) return;
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        }
+        function toggleMobileMenu() { sidebar?.classList.toggle('-translate-x-full'); overlay?.classList.toggle('hidden'); }
         document.getElementById('mobile-toggle')?.addEventListener('click', toggleMobileMenu);
         document.getElementById('close-sidebar-mobile')?.addEventListener('click', toggleMobileMenu);
         overlay?.addEventListener('click', toggleMobileMenu);
 
-        // NAVEGAÇÃO E TABS
+        // Troca Abas Laterais e Views
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active', 'bg-gold/15', 'text-gold', 'shadow-[0_0_10px_rgba(212,175,55,0.1)]', 'border-gold/30'));
                 btn.classList.add('active', 'bg-gold/15', 'text-gold', 'shadow-[0_0_10px_rgba(212,175,55,0.1)]', 'border-gold/30');
-                
                 document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
                 const targetView = document.getElementById(`view-${btn.dataset.target}`);
                 if (targetView) targetView.classList.add('active');
                 
                 const titleSpan = btn.querySelector('.sidebar-text');
                 if (titleSpan) document.getElementById('current-module-title').textContent = titleSpan.textContent;
-                
                 if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) toggleMobileMenu();
             });
         });
@@ -1002,11 +992,10 @@
             } else toggleMobileMenu();
         });
 
-        document.getElementById('btn-print')?.addEventListener('click', () => window.print());
-
+        // Troca Abas Internas (Resultados da Mandala)
         document.querySelectorAll('.subtab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const p = btn.closest('.lg\\:col-span-5, .xl\\:col-span-5');
+                const p = btn.closest('.xl\\:col-span-6');
                 if(!p) return;
                 p.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active', 'bg-gold/5', 'border-gold/20'));
                 btn.classList.add('active', 'bg-gold/5', 'border-gold/20');
@@ -1016,7 +1005,9 @@
             });
         });
 
-        // --- MÓDULO: MAPA NATAL (RADIX) ---
+        // =====================================
+        // CONTROLLER: CALCULAR MAPA NATAL (RADIX)
+        // =====================================
         document.getElementById('natal-form')?.addEventListener('submit', e => {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
@@ -1024,6 +1015,7 @@
             if (btn) btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Calc...`; 
             lucide.createIcons();
             
+            // Permite Ui dar "respiro" no spinner enquanto o processamento JS pesado ocorre
             setTimeout(() => {
                 try {
                     const dStr = document.getElementById('natal-date').value, tStr = document.getElementById('natal-time').value;
@@ -1031,7 +1023,6 @@
                     const tz = parseFloat(document.getElementById('natal-tz').value) || 0;
                     
                     const jd = getJD(dStr, tStr, tz); 
-
                     const planets = calcPlanets(jd);
                     const houses = calcHouses(jd, lat, lng, STATE.settings.houses);
                     const aspects = calcAspects(planets);
@@ -1039,17 +1030,19 @@
                     STATE.activeChart = { jd, lat, lng, tz, planets, ...houses, aspects, dStr, tStr };
                     const d = STATE.activeChart;
 
+                    // Exibição Mandala
                     const container = document.getElementById('mandala-container');
                     if (container) container.innerHTML = drawSVG(d);
                     
+                    // Preenche Tabela
                     const tablePlanets = document.getElementById('nt-table-planets');
                     if (tablePlanets) {
                         tablePlanets.innerHTML = d.planets.map(p => `
-                            <tr class="hover:bg-white/5 transition-colors">
+                            <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                                 <td class="p-3 font-semibold"><span style="color:${p.color}">${p.sym}</span> <span class="text-white">${p.name}</span></td>
                                 <td class="p-3 text-right font-mono text-gold/90">${(p.longitude % 30).toFixed(2)}°</td>
                                 <td class="p-3 font-bold text-center sm:text-left" style="color:${p.sign.color}">${p.sign.name}</td>
-                                <td class="p-3 text-center text-textMuted font-mono">--</td>
+                                <td class="p-3 text-textMuted font-mono text-xs">Abs: ${p.longitude.toFixed(1)}°</td>
                             </tr>
                         `).join('');
                     }
@@ -1071,33 +1064,23 @@
                         `).join('');
                     }
                     
-                    const tradTable = document.getElementById('nt-trad-table');
-                    if (tradTable) {
-                        tradTable.innerHTML = d.planets.filter(p => p.id !== 'node').map(p => `
-                            <tr class="hover:bg-white/5">
-                                <td class="p-2.5 font-bold" style="color:${p.color}">${p.sym} <span class="hidden sm:inline">${p.name}</span></td>
-                                <td class="p-2.5 text-gold/80">${degToDms(normalize(180-p.longitude))}</td>
-                                <td class="p-2.5 text-gold/80">${degToDms(normalize(360-p.longitude))}</td>
-                                <td class="p-2.5 text-textMuted italic">Peregrino</td>
-                            </tr>
-                        `).join('');
-                    }
+                    document.getElementById('elements-bar').innerHTML = `Sistema: <strong class="text-gold uppercase">${STATE.settings.houses}</strong>`;
                     
-                    const arabicList = document.getElementById('nt-arabic-list');
-                    if(arabicList) {
-                        const sun = d.planets[0].longitude; const moon = d.planets[1].longitude;
-                        arabicList.innerHTML = `
-                            <li class="flex justify-between border-b border-white/5 pb-2"><span>Pars Fortuna (Diurna):</span> <span class="text-white font-bold">${degToDms(normalize(d.asc + moon - sun))}</span></li>
-                            <li class="flex justify-between border-b border-white/5 pb-2 pt-1"><span>Pars Spiritus (Diurna):</span> <span class="text-white font-bold">${degToDms(normalize(d.asc + sun - moon))}</span></li>
-                            <li class="flex justify-between pt-1"><span>Pars Fortuna (Noturna):</span> <span class="text-white font-bold">${degToDms(normalize(d.asc + sun - moon))}</span></li>
+                    // NOVIDADE: Quando calcula Radix, ele passa de forma automática
+                    // os ângulos e posicionamentos novos para o menu da Aba "Trânsitos Exatos"
+                    const npointSel = document.getElementById('hit-npoint');
+                    if(npointSel) {
+                        npointSel.innerHTML = `
+                            <option value="asc">Ascendente (ASC) - ${d.asc.toFixed(1)}°</option>
+                            <option value="mc">Meio do Céu (MC) - ${d.mc.toFixed(1)}°</option>
+                            <option value="sun">Sol Natal - ${d.planets.find(p=>p.id==='sun').longitude.toFixed(1)}°</option>
+                            <option value="moon">Lua Natal - ${d.planets.find(p=>p.id==='moon').longitude.toFixed(1)}°</option>
                         `;
                     }
                     
-                    document.getElementById('elements-bar').innerHTML = `Sistema de Casas: <strong class="text-gold uppercase">${STATE.settings.houses}</strong>`;
-                    
                     if (btn) btn.innerHTML = originalContent; 
                     lucide.createIcons();
-                    showToast(`Mapa calculado via Efemérides Meeus (Plácido: ${STATE.settings.houses === 'placidus' ? 'ON' : 'OFF'})`);
+                    showToast(`Mapa calculado.`);
                 } catch(e) {
                     if (btn) btn.innerHTML = originalContent; 
                     showToast("Erro ao calcular: Verifique os dados inseridos.");
@@ -1106,10 +1089,12 @@
             }, 100); 
         });
 
-        // --- MÓDULO: SINASTRIA ---
+        // =====================================
+        // CONTROLLER: SINASTRIA
+        // =====================================
         document.getElementById('synastry-form')?.addEventListener('submit', e => {
-            e.preventDefault(); if(!STATE.activeChart) return showToast("Erro: Calcule o Mapa Radix primeiro para ativar a memória.");
-            const p2id = document.getElementById('synastry-p2').value; if(!p2id) return showToast("Por favor, selecione um parceiro salvo na BD.");
+            e.preventDefault(); if(!STATE.activeChart) return showToast("Calcule o Mapa Natal primeiro.");
+            const p2id = document.getElementById('synastry-p2').value; if(!p2id) return showToast("Selecione um parceiro.");
             
             const p2C = STATE.clients.find(c => c.id === p2id);
             const p2Jd = getJD(p2C.date, p2C.time, parseFloat(p2C.tz) || -3);
@@ -1120,125 +1105,23 @@
             
             const iAsps = calcAspects(STATE.activeChart.planets, p2Planets);
             document.getElementById('synastry-aspects-grid').innerHTML = iAsps.map(a => `
-                <div class="bg-black/40 p-3 rounded-lg flex justify-between items-center border border-white/5 hover:border-gold/20 transition-all shadow-inner">
-                    <span class="text-base font-bold">${a.p1.sym}</span>
+                <div class="bg-black/40 p-3 rounded flex justify-between items-center border border-white/5 hover:border-gold/20 transition-all">
+                    <span class="text-base font-bold text-white">${a.p1.sym}</span>
                     <div class="flex flex-col items-center">
                         <span style="color:${a.color}" class="text-xl font-bold">${a.sym}</span>
                         <span class="text-[9px] text-textMuted font-mono mt-1 tracking-tighter">${a.exact}° Orbe</span>
                     </div>
-                    <span class="text-base font-bold">${a.p2.sym}</span>
+                    <span class="text-base font-bold text-gray-400">${a.p2.sym}</span>
                 </div>
             `).join('');
             showToast("Bi-Wheel Sinastria gerada.");
         });
 
-        // --- MÓDULO: RETIFICAÇÃO REAL (Processamento Dinâmico de Arcos Secundários) ---
-        document.getElementById('rect-form')?.addEventListener('submit', e => {
-            e.preventDefault(); if(!STATE.activeChart) return showToast("Erro: Mapa Radix necessário para acessar os eixos base (Asc/MC).");
-            const desc = document.getElementById('rect-desc').value; const fd = document.getElementById('rect-date').value;
-            
-            STATE.rectFacts.push({ desc, fd });
-            
-            document.getElementById('rect-events-body').innerHTML = STATE.rectFacts.map((f)=>`<tr class="hover:bg-white/5"><td class="p-2 font-medium text-white/80">${f.desc}</td><td class="p-2 font-mono text-gold">${f.fd}</td><td class="p-2 text-emerald-400 text-center font-bold">Incluso</td></tr>`).join('');
-            
-            // MÁQUINA DE RETIFICAÇÃO: Calcula o mapa a cada 2 minutos dentro da janela de -30 a +30 mins
-            const gc = document.getElementById('rect-chart'); gc.innerHTML = '';
-            const radixDate = new Date((STATE.activeChart.jd - 2440587.5) * 86400000);
-            let histogram = new Array(31).fill(0); 
-            let maxHits = 0;
-
-            for(let step = 0; step <= 30; step++) {
-                const offsetMins = (step * 2) - 30; 
-                
-                const tStr = STATE.activeChart.tStr;
-                const [h, m, s=0] = tStr.split(':').map(Number);
-                const totalMins = h * 60 + m + offsetMins;
-                const newH = Math.floor(totalMins / 60) % 24;
-                const newM = ((totalMins % 60) + 60) % 60;
-                const newTimeStr = `${String(Math.abs(newH)).padStart(2,'0')}:${String(newM).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-                
-                const testJd = getJD(STATE.activeChart.dStr, newTimeStr, STATE.activeChart.tz);
-                const testHouses = calcHouses(testJd, STATE.activeChart.lat, STATE.activeChart.lng, STATE.settings.houses);
-                
-                let hits = 0;
-                STATE.rectFacts.forEach(fact => {
-                    const factDate = new Date(fact.fd);
-                    const ageY = (factDate - radixDate) / (365.25 * 86400000); // 1 dia = 1 ano real
-                    const progJd = testJd + ageY; 
-                    const progPlanets = calcPlanets(progJd);
-                    
-                    progPlanets.forEach(p => {
-                        let diffAsc = Math.abs(p.longitude - testHouses.asc); if (diffAsc > 180) diffAsc = 360 - diffAsc;
-                        let diffMc = Math.abs(p.longitude - testHouses.mc); if (diffMc > 180) diffMc = 360 - diffMc;
-                        
-                        if(diffAsc < 1 || Math.abs(diffAsc - 90) < 1 || Math.abs(diffAsc - 180) < 1) hits++;
-                        if(diffMc < 1 || Math.abs(diffMc - 90) < 1 || Math.abs(diffMc - 180) < 1) hits++;
-                    });
-                });
-                
-                histogram[step] = hits;
-                if(hits > maxHits) maxHits = hits;
-            }
-
-            for(let i=0; i<=30; i++) {
-                let hPercent = maxHits === 0 ? 5 : (histogram[i] / maxHits) * 95 + 5;
-                const offsetMins = (i * 2) - 30;
-                gc.innerHTML += `<div class="w-full bg-gold/40 hover:bg-gold/90 transition-all cursor-pointer rounded-t-sm" style="height:${hPercent}%" title="Ajuste: ${offsetMins > 0 ? '+' : ''}${offsetMins} min | Potência: ${histogram[i]}"></div>`;
-            }
-
-            document.getElementById('rect-desc').value = '';
-            showToast("Progressões processadas. Histograma Analítico Gerado.");
-        });
-
-        // --- MÓDULO: TABELAS BELEZA (Ciclo Lunar Astronómico Real) ---
-        document.getElementById('btn-calc-beauty')?.addEventListener('click', () => {
-            const todayD = new Date();
-            const todayJd = getJD(todayD.toISOString().split('T')[0], '12:00', 0); 
-            let corte = [];
-            let depil = [];
-
-            for(let i=0; i<30; i++) {
-                const jd = todayJd + i;
-                const p = calcPlanets(jd);
-                const sun = p[0].longitude; const moon = p[1].longitude;
-                let diff = normalize(moon - sun); 
-                
-                const dateStr = new Date(todayD.getTime() + i*86400000).toLocaleDateString('pt-BR');
-                
-                if (diff > 190 && diff < 350) {
-                    if (depil.length < 3) depil.push(`<li><span class="text-white font-bold">${dateStr}</span> <br><span class="text-blue-400/80">Fase Minguante (${p[1].sign.sym})</span></li>`);
-                } 
-                else if (diff > 10 && diff < 170) {
-                    if (corte.length < 3) corte.push(`<li><span class="text-white font-bold">${dateStr}</span> <br><span class="text-emerald-400/80">Fase Crescente (${p[1].sign.sym})</span></li>`);
-                }
-            }
-
-            if(corte.length > 0) document.getElementById('tab-corte').innerHTML = corte.join('');
-            if(depil.length > 0) document.getElementById('tab-depil').innerHTML = depil.join('');
-            showToast("Motor varreu os próximos 30 dias de órbita lunar.");
-        });
-
-        // --- MÓDULO: MUNDIAL (Matriz de Conjunções Lentas) ---
-        document.getElementById('btn-mundial')?.addEventListener('click', () => {
-            const ano = document.getElementById('mundial-year').value || 2025;
-            const body = document.getElementById('mundial-grid'); body.innerHTML = '';
-            const m = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-            
-            let jd = getJD(`${ano}-01-01`, '12:00');
-            m.forEach((mes, i) => {
-                const p = calcPlanets(jd + (i*30)); 
-                const d1 = Math.abs(p[5].longitude - p[6].longitude) < 20 ? '<span class="text-gold font-bold drop-shadow-[0_0_3px_rgba(212,175,55,1)]">☌ PROX</span>' : '<span class="text-textMuted/50">-</span>';
-                const d2 = Math.abs(p[5].longitude - p[7].longitude) < 20 ? '<span class="text-gold font-bold drop-shadow-[0_0_3px_rgba(212,175,55,1)]">☌ PROX</span>' : '<span class="text-textMuted/50">-</span>';
-                const d3 = Math.abs(p[6].longitude - p[7].longitude) < 20 ? '<span class="text-gold font-bold drop-shadow-[0_0_3px_rgba(212,175,55,1)]">☌ PROX</span>' : '<span class="text-textMuted/50">-</span>';
-                
-                body.innerHTML += `<tr class="hover:bg-white/5 transition-colors"><td class="p-4 border-r border-white/5 text-white font-bold tracking-wider">${mes}</td><td class="p-4 border-r border-white/5">${d1}</td><td class="p-4 border-r border-white/5">${d2}</td><td class="p-4">${d3}</td></tr>`;
-            });
-            showToast(`Matriz de ciclos mundiais processada para ${ano}.`);
-        });
-
-        // --- MÓDULO: PREVISÕES (Direções / Trânsitos) ---
+        // =====================================
+        // CONTROLLER: PREVISÕES GERAIS E DINÂMICAS
+        // =====================================
         document.getElementById('forecast-form')?.addEventListener('submit', e => {
-            e.preventDefault(); if(!STATE.activeChart) return showToast("Erro: Memória Radix vazia. Vá à aba Mapa Natal.");
+            e.preventDefault(); if(!STATE.activeChart) return showToast("Mapa Natal vazio.");
             const fD = document.getElementById('forecast-date').value; const met = document.getElementById('forecast-method').value;
             
             const radixD = new Date((STATE.activeChart.jd - 2440587.5) * 86400000);
@@ -1250,10 +1133,6 @@
                 pProg = calcPlanets(getJD(fD, '12:00', STATE.activeChart.tz)); tit = "Trânsitos Diários Reais"; 
             } else if (met === 'sec_prog') { 
                 pProg = calcPlanets(STATE.activeChart.jd + ageY); tit = "Direções Secundárias (" + ageY.toFixed(1) + " a)"; 
-            } else if (met === 'sym_degree') { 
-                pProg = STATE.activeChart.planets.map(p=>({ ...p, longitude: normalize(p.longitude + ageY) })); tit = "Simbólica Grau por Ano"; 
-            } else if (met === 'sym_naibod') { 
-                pProg = STATE.activeChart.planets.map(p=>({ ...p, longitude: normalize(p.longitude + (ageY * 0.9856)) })); tit = "Simbólica Passo Naibod"; 
             }
 
             document.getElementById('forecast-results').classList.remove('hidden');
@@ -1261,183 +1140,407 @@
             document.getElementById('forecast-title').innerHTML = `<i data-lucide="clock" class="inline w-5 h-5 mr-2"></i>${tit}`;
             
             const fAsps = calcAspects(STATE.activeChart.planets, pProg);
-            document.getElementById('forecast-table-body').innerHTML = fAsps.slice(0, 20).map(a => `
-                <tr class="hover:bg-white/5 transition-colors">
-                    <td class="p-3 font-semibold" style="color:${a.p2.color}">${a.p2.sym} <span class="text-white hidden sm:inline">${a.p2.name}</span></td>
-                    <td class="p-3 text-gold/80 font-mono">${degToDms(a.p2.longitude)}</td>
-                    <td class="p-3 leading-tight"><span style="color:${a.color}" class="text-lg font-bold align-middle">${a.sym}</span> com <span class="font-bold ml-1">${a.p1.sym}</span> <div class="text-[9px] text-textMuted sm:inline sm:ml-2">(${a.exact}° Orbe)</div></td>
-                </tr>
+            document.getElementById('forecast-aspects-grid').innerHTML = fAsps.slice(0, 30).map(a => `
+                <div class="bg-black/40 p-2 rounded flex justify-between items-center border border-white/5">
+                    <span class="font-bold text-white">${a.p1.sym} <span class="text-[9px] text-gray-500 font-mono">Nat</span></span>
+                    <span style="color:${a.color}" class="font-bold">${a.sym}</span>
+                    <span class="font-bold text-purple-300">${a.p2.sym} <span class="text-[9px] text-purple-400/50 font-mono">Tr</span></span>
+                </div>
             `).join('');
             lucide.createIcons();
-            showToast(`Dinâmica de Previsão (${met}) executada.`);
+            showToast(`Visão de ${met} atualizada.`);
         });
 
-        // --- 6. DB CLIENTES (CRUD LocalStorage) ---
-        function refreshDB() {
-            const lc = document.getElementById('db-list-container');
-            if(!lc) return;
-            const term = document.getElementById('db-search')?.value.toLowerCase() || '';
-            const filtered = STATE.clients.filter(c => c.name.toLowerCase().includes(term));
+        /**
+         * NOVIDADE MATEMÁTICA: O MOTOR ITERATIVO DE INTERPOLAÇÃO ORBITAL (Trânsitos Exatos & Revoluções)
+         * - Este é o coração do cálculo matemático de "hits" pedidos pelo usuário (ex: quando o sol bater exatamente no Ascendente?).
+         * O algoritmo testa a posição avançando 'stepDays' (ex: dia a dia). Quando detecta que a longitude do trânsito
+         * estava ATRÁS do alvo (prevLon) e num dia pulou para a FRENTE do alvo (currLon) -> Ele cruza essa linha matemática
+         * descobrindo a fração do dia, e nos devolve o Dia Juliano EXATO onde a diferença angular de transito é 0 graus da posição alvo.
+         */
+        function findExactTransit(tPlanetId, targetLon, startJd, stepDays = 1, maxIter = 400) {
+            let prevJd = startJd;
+            let prevLon = calcPlanets(prevJd).find(p => p.id === tPlanetId).longitude;
+            
+            for(let i=1; i<=maxIter; i++) {
+                let currJd = startJd + (i * stepDays);
+                let currLon = calcPlanets(currJd).find(p => p.id === tPlanetId).longitude;
+                
+                let diffPrev = normalize(prevLon - targetLon);
+                let diffCurr = normalize(currLon - targetLon);
+                
+                // Vetor distância
+                let angularDist = normalize(currLon - prevLon);
+                if(angularDist > 180) angularDist -= 360; // Trata saltos na retrogradação.
+                
+                let distToTarget = normalize(targetLon - prevLon);
+                if(distToTarget > 180) distToTarget -= 360;
 
-            lc.innerHTML = filtered.map((c) => {
-                const globalIndex = STATE.clients.indexOf(c);
-                return `
-                <div class="p-4 cursor-pointer hover:bg-gold/10 flex justify-between group transition-colors border-b border-white/5" onclick="window.loadClient(${globalIndex})">
-                    <div class="truncate pr-4">
-                        <div class="text-sm font-bold text-white mb-0.5 truncate">${c.name}</div>
-                        <div class="text-[11px] font-mono text-gold/70 truncate">${c.date} | ${c.city || 'S/ Local'}</div>
-                    </div>
-                    <div class="flex items-center shrink-0">
-                        <span class="hidden sm:inline-block bg-black/50 px-2 py-1 rounded text-[9px] text-textMuted uppercase mr-3">${c.group || 'Geral'}</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4 text-gold opacity-50 group-hover:opacity-100 transition-opacity"></i>
-                    </div>
-                </div>
-            `}).join('');
-            lucide.createIcons();
-            
-            const countEl = document.getElementById('dash-client-count');
-            if(countEl) countEl.textContent = STATE.clients.length;
-            
-            const counter = document.getElementById('db-counter');
-            if(STATE.clients.length === 0 && counter) {
-                counter.textContent = `0 / 0`;
-            } else if (counter) {
-                counter.textContent = `${Math.max(1, STATE.currentIdx + 1)} / ${STATE.clients.length}`;
+                // Verificador de colisão: Se distânciado Alvo for menor ou igual à distância Movida no Step => Cruzou o alvo.
+                if ( (angularDist > 0 && distToTarget > 0 && distToTarget <= angularDist) || 
+                     (angularDist < 0 && distToTarget < 0 && distToTarget >= angularDist) ) {
+                    
+                    let fraction = distToTarget / angularDist;
+                    return prevJd + (fraction * stepDays); // Regra de três simples entre as duas medições inter-diárias (ou horas)
+                }
+                prevLon = currLon;
+                prevJd = currJd;
             }
+            return null; // Trânsito não ocorre nesse range iterativo.
+        }
+
+        // =====================================
+        // CONTROLLER: MÓDULO DOS HITS EXATOS
+        // =====================================
+        const initHitSels = () => {
+            const hitPSel = document.getElementById('hit-tplanet');
+            if(hitPSel) {
+                hitPSel.innerHTML = ALL_PLANETS.map(p=>`<option value="${p.id}">${p.name} (${p.sym})</option>`).join('');
+            }
+        };
+        initHitSels();
+
+        document.getElementById('hit-form')?.addEventListener('submit', e => {
+            e.preventDefault();
+            if(!STATE.activeChart) return showToast("Calcule um Mapa Natal para definir os pontos alvo.");
             
-            const synP2 = document.getElementById('synastry-p2');
-            if(synP2) {
-                synP2.innerHTML = '<option value="">Selecione um cliente salvo...</option>' + STATE.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Buscando...`;
+            
+            setTimeout(() => {
+                const tP = document.getElementById('hit-tplanet').value;
+                const nPoint = document.getElementById('hit-npoint').value;
+                const sDate = document.getElementById('hit-startdate').value;
+                
+                let targetLon = 0;
+                // Identifica se o usuário quer calcular batida em Eixo ou em Planeta (Sol/Lua)
+                if(nPoint === 'asc') targetLon = STATE.activeChart.asc;
+                else if(nPoint === 'mc') targetLon = STATE.activeChart.mc;
+                else targetLon = STATE.activeChart.planets.find(p=>p.id === nPoint).longitude;
+
+                const startJd = getJD(sDate, '00:00', STATE.activeChart.tz);
+                
+                // Planetas rápidos como lua saltam +13 graus/dia. Precisamos que o Step de Varredura Iterativa 
+                // seja menor (ex: 0.05 de 1 dia é praticamente hora em hora) pra ele não "pular a fenda" do cruzamento.
+                const step = tP === 'moon' ? 0.05 : (tP === 'mercury' || tP === 'venus' ? 0.2 : 1);
+                const maxI = tP === 'moon' ? 600 : (tP === 'pluto' ? 1000 : 800); 
+
+                // A Mágica de Meeus acontece aqui e converte frações para Dia Juliano Limpo
+                const hitJd = findExactTransit(tP, targetLon, startJd, step, maxI);
+                
+                const resDiv = document.getElementById('hit-result');
+                if(hitJd) {
+                    document.getElementById('hit-date-output').innerText = JDToDate(hitJd, STATE.activeChart.tz);
+                    resDiv.classList.remove('hidden');
+                    showToast("Trânsito exato encontrado.");
+                } else {
+                    document.getElementById('hit-date-output').innerText = "Não ocorreu no período avaliado.";
+                    resDiv.classList.remove('hidden');
+                    showToast("Planeta não cruzou o ponto nestes próximos anos/meses.");
+                }
+                
+                btn.innerHTML = `<i data-lucide="search" class="w-4 h-4"></i> Buscar Ocorrência`;
+                lucide.createIcons();
+            }, 50);
+        });
+
+        // =====================================
+        // CONTROLLER: REVOLUÇÕES DE TODOS ASTROS 
+        // =====================================
+        document.getElementById('return-form')?.addEventListener('submit', e => {
+            e.preventDefault(); if(!STATE.activeChart) return showToast("Calcule o Radix primeiro.");
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Iterando...`;
+
+            setTimeout(() => {
+                const pid = document.getElementById('return-planet-sel').value;
+                const sDate = document.getElementById('return-start-date').value;
+                const startJd = getJD(sDate, '00:00', STATE.activeChart.tz);
+                
+                const natP = STATE.activeChart.planets.find(p => p.id === pid);
+                if(!natP) return showToast("Planeta base não encontrado.");
+                
+                // Retorno é um sub-tipo the HIT Exact. A Posição Alvo é do Próprio planeta (Retorno)
+                const targetLon = natP.longitude;
+                document.getElementById('return-target-lon').innerText = `Alvo: ${targetLon.toFixed(4)}° (${natP.name})`;
+
+                const step = pid === 'moon' ? 0.1 : 1;
+                // Se urano leva 84 anos, a iteração diária precisa ir longe (365*90) dias se solicitado, 
+                // para certificar que vai achá-lo na linha de tempo pedida. 
+                const maxI = pid === 'moon' ? 300 : (pid === 'uranus' ? 365*90 : 365*30);
+                
+                const returnJd = findExactTransit(pid, targetLon, startJd, step, maxI);
+
+                if(returnJd) {
+                    document.getElementById('return-exact-date').innerText = JDToDate(returnJd, STATE.activeChart.tz);
+                    // Regera a mandala para a hora encontrada.
+                    const retP = calcPlanets(returnJd);
+                    const retHouses = calcHouses(returnJd, STATE.activeChart.lat, STATE.activeChart.lng, STATE.settings.houses);
+                    
+                    document.getElementById('return-results').classList.remove('hidden');
+                    document.getElementById('return-svg-container').innerHTML = drawSVG({ ...STATE.activeChart, planets: retP, ...retHouses, cusps: retHouses.cusps });
+                    showToast(`Revolução de ${natP.name} calculada.`);
+                } else {
+                    document.getElementById('return-exact-date').innerText = "Fora do alcance.";
+                }
+                
+                btn.innerHTML = `<i data-lucide="target" class="w-4 h-4"></i> Encontrar Retorno`;
+                lucide.createIcons();
+            }, 50);
+        });
+
+        // =====================================
+        // CONTROLLER: EFEMÉRIDES DE LUNAÇÕES
+        // =====================================
+        document.getElementById('btn-calc-lunations')?.addEventListener('click', () => {
+            const mVal = document.getElementById('lunation-month').value;
+            if(!mVal) return showToast("Selecione o mês.");
+            
+            const body = document.getElementById('lunations-body');
+            body.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-gold italic"><i data-lucide="loader" class="animate-spin inline w-4 h-4"></i> Escaneando...</td></tr>';
+            
+            setTimeout(() => {
+                const [yr, mo] = mVal.split('-');
+                let jdStart = getJD(`${yr}-${mo}-01`, '00:00', -3); 
+                let phases = [];
+                
+                // Posição comparativa base é a Distância da Lua Subtraída a Posição do Sol
+                let prevDiff = normalize(calcPlanets(jdStart).find(p=>p.id==='moon').longitude - calcPlanets(jdStart).find(p=>p.id==='sun').longitude);
+                
+                // NOVIDADE: A cada passo de 0.2 Dias (aprox 5h) vamos monitorar os ângulos de Lunação Real Astrofísica
+                for(let i=0.2; i<=32; i+=0.2) {
+                    let cJd = jdStart + i;
+                    let p = calcPlanets(cJd);
+                    let currDiff = normalize(p.find(p=>p.id==='moon').longitude - p.find(p=>p.id==='sun').longitude);
+                    
+                    // Checador de Fenda: Quando a distância das duas massas encostar no target (Ex: 180° cheia), grava!
+                    const checkCross = (target) => {
+                        let cPrev = prevDiff, cCurr = currDiff;
+                        if(target === 0 && cPrev > 300 && cCurr < 60) { cCurr += 360; }
+                        if (cPrev <= target && cCurr >= target) {
+                            let frac = (target - cPrev) / (cCurr - cPrev);
+                            return cJd - 0.2 + (frac * 0.2);
+                        }
+                        return null;
+                    };
+
+                    let hitNew = checkCross(0) || checkCross(360);
+                    let hit1Q = checkCross(90);
+                    let hitFull = checkCross(180);
+                    let hit3Q = checkCross(270);
+
+                    if(hitNew) phases.push({ name: 'Nova', jd: hitNew, icon: '🌑', color: '#9CA3AF' });
+                    if(hit1Q) phases.push({ name: 'Crescente', jd: hit1Q, icon: '🌓', color: '#10B981' });
+                    if(hitFull) phases.push({ name: 'Cheia', jd: hitFull, icon: '🌕', color: '#D4AF37' });
+                    if(hit3Q) phases.push({ name: 'Minguante', jd: hit3Q, icon: '🌗', color: '#3B82F6' });
+
+                    prevDiff = currDiff;
+                }
+                
+                if(phases.length > 0) {
+                    body.innerHTML = phases.map(ph => {
+                        let p = calcPlanets(ph.jd);
+                        let m = p.find(x=>x.id==='moon');
+                        return `<tr class="hover:bg-white/5 border-b border-white/5">
+                            <td class="p-3 font-bold" style="color:${ph.color}">${ph.icon} ${ph.name}</td>
+                            <td class="p-3 text-white font-mono">${JDToDate(ph.jd, -3)} <span class="text-[9px] text-gray-500">UTC-3</span></td>
+                            <td class="p-3 text-gold">${(m.longitude % 30).toFixed(2)}° de ${m.sign.name}</td>
+                        </tr>`;
+                    }).join('');
+                } else {
+                    body.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-red-400">Erro ao calcular.</td></tr>';
+                }
+            }, 50);
+        });
+
+        // =====================================
+        // CONTROLLER: FIREBASE CLOUD DB CLIENTES
+        // =====================================
+        
+        // NOVIDADE: Fica ouvindo ativamente atualizações no Banco em Nuvem. Se salvar no Celular, vai pingar na mesma hora no seu Desktop.
+        function subscribeToClients() {
+            if (!userId) return;
+            const q = query(collection(db, 'artifacts', appId, 'users', userId, 'clients'));
+            onSnapshot(q, (snapshot) => {
+                STATE.clients = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                refreshDBUI(); // Dá refresh na lista da esquerda (Visão BD).
+            }, (error) => {
+                console.error("Erro Snapshot:", error);
+                showToast("Erro ao sincronizar banco.");
+            });
+        }
+
+        // Puxa configs do Astro Engine
+        async function loadCloudSettings() {
+            if(!userId) return;
+            const docRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'config');
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                STATE.settings = { ...STATE.settings, ...docSnap.data() };
+                initConfigUI();
             }
         }
 
+        // Reconstrói a lista visual (Prontuários)
+        function refreshDBUI() {
+            const lc = document.getElementById('db-list-container');
+            const term = document.getElementById('db-search')?.value.toLowerCase() || '';
+            const filtered = STATE.clients.filter(c => (c.name||'').toLowerCase().includes(term));
+
+            if(filtered.length === 0) {
+                lc.innerHTML = '<div class="p-4 text-center text-textMuted text-xs italic">Nenhum registro encontrado.</div>';
+            } else {
+                lc.innerHTML = filtered.map((c) => {
+                    const globalIndex = STATE.clients.indexOf(c);
+                    return `
+                    <div class="p-4 cursor-pointer hover:bg-gold/10 flex justify-between group transition-colors border-b border-white/5" onclick="window.loadClient(${globalIndex})">
+                        <div class="truncate pr-4">
+                            <div class="text-sm font-bold text-white mb-0.5 truncate">${c.name}</div>
+                            <div class="text-[11px] font-mono text-gold/70 truncate">${c.date} | ${c.city || 'S/ Local'}</div>
+                        </div>
+                        <div class="flex items-center shrink-0">
+                            <span class="hidden sm:inline-block bg-black/50 px-2 py-1 rounded text-[9px] text-textMuted uppercase mr-3">${c.group || 'Geral'}</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-gold opacity-50 group-hover:opacity-100 transition-opacity"></i>
+                        </div>
+                    </div>
+                `}).join('');
+                lucide.createIcons();
+            }
+            
+            // Popula também o combobox da Tela de Sinastria pra facilitar a Busca do parceiro de relacionamento!
+            const synP2 = document.getElementById('synastry-p2');
+            if(synP2) {
+                synP2.innerHTML = '<option value="">Selecione da base...</option>' + STATE.clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+            }
+        }
+
+        // Coloca a Ficha Cloud no Formulário Central.
         window.loadClient = (i) => {
             if (i < 0 || i >= STATE.clients.length) return;
             const c = STATE.clients[i];
-            STATE.currentIdx = i;
-            ['id','name','group','date','time','city','lat','lng','notes'].forEach(k => {
+            ['id','name','group','date','time','tz','city','lat','lng','photoUrl','notes'].forEach(k => {
                 const el = document.getElementById(`db-${k}`);
                 if(el) el.value = c[k] || '';
             });
-            const counter = document.getElementById('db-counter');
-            if (counter) counter.textContent = `${i + 1} / ${STATE.clients.length}`;
-            showToast(`Ficha de ${c.name} aberta no editor.`);
+            document.getElementById('btn-db-delete').disabled = false;
+            showToast(`Ficha: ${c.name}`);
         };
 
-        document.getElementById('db-search')?.addEventListener('input', refreshDB);
-        document.getElementById('db-nav-first')?.addEventListener('click', (e) => { e.preventDefault(); window.loadClient(0); });
-        document.getElementById('db-nav-last')?.addEventListener('click', (e) => { e.preventDefault(); window.loadClient(STATE.clients.length - 1); });
-        document.getElementById('db-nav-prev')?.addEventListener('click', (e) => { e.preventDefault(); if (STATE.currentIdx > 0) window.loadClient(STATE.currentIdx - 1); });
-        document.getElementById('db-nav-next')?.addEventListener('click', (e) => { e.preventDefault(); if (STATE.currentIdx < STATE.clients.length - 1) window.loadClient(STATE.currentIdx + 1); });
-
+        document.getElementById('db-search')?.addEventListener('input', refreshDBUI);
+        
         document.getElementById('btn-db-clear')?.addEventListener('click', () => { 
             document.getElementById('db-client-form')?.reset(); 
             if (document.getElementById('db-id')) document.getElementById('db-id').value = ''; 
-            STATE.currentIdx = -1;
-            const counter = document.getElementById('db-counter');
-            if (counter) counter.textContent = `Novo / ${STATE.clients.length}`;
+            document.getElementById('btn-db-delete').disabled = true;
         });
 
-        document.getElementById('db-client-form')?.addEventListener('submit', e => {
+        // GRAVAR BD - Envia Json Seguro via setDoc pro Google Cloud Storage Firebase vinculado à sua conta privada.
+        document.getElementById('db-client-form')?.addEventListener('submit', async e => {
             e.preventDefault();
+            if(!userId || !isOnline) return showToast("Sistema offline. Não é possível salvar.");
+            
+            const btn = document.getElementById('btn-db-save');
+            btn.innerHTML = `<i data-lucide="loader" class="w-3 h-3 animate-spin inline"></i> Salvando...`;
+            
+            const id = document.getElementById('db-id').value || crypto.randomUUID();
+            const cData = {};
+            ['name','group','date','time','tz','city','lat','lng','photoUrl','notes'].forEach(k => {
+                const el = document.getElementById(`db-${k}`);
+                if (el) cData[k] = el.value;
+            });
+            cData.updatedAt = new Date().toISOString();
+
             try {
-                const id = document.getElementById('db-id').value || crypto.randomUUID();
-                const c = { id };
-                ['name','group','date','time','city','lat','lng','notes'].forEach(k => {
-                    const el = document.getElementById(`db-${k}`);
-                    if (el) c[k] = el.value;
-                });
-                const idx = STATE.clients.findIndex(x => x.id === id);
-                if(idx >= 0) STATE.clients[idx] = c; else STATE.clients.push(c);
-                localStorage.setItem('pegasus_clients', JSON.stringify(STATE.clients));
-                
-                refreshDB();
-                window.loadClient(STATE.clients.findIndex(x => x.id === id));
-                showToast("Ficha Técnica Gravada com Sucesso!"); 
-            } catch (err) {
-                showToast("Erro ao gravar. LocalStorage pode estar desativado.");
+                // A REGRA FIREBASE É RESPEITADA: 'artifacts' -> 'appId' -> 'users' -> 'userId' -> 'clients' -> 'documentId'
+                await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'clients', id), cData);
+                document.getElementById('db-id').value = id;
+                document.getElementById('btn-db-delete').disabled = false;
+                showToast("Sincronizado na Nuvem!"); 
+            } catch(err) {
+                console.error(err);
+                showToast("Erro ao salvar na nuvem.");
+            } finally {
+                btn.innerHTML = `<i data-lucide="cloud-upload" class="w-3 h-3 inline"></i> Salvar na Nuvem`;
+                lucide.createIcons();
             }
         });
 
-        document.getElementById('btn-db-delete')?.addEventListener('click', () => {
+        // EXCLUIR DB - Dispara o Delete na Nuvem
+        document.getElementById('btn-db-delete')?.addEventListener('click', async () => {
+            if(!userId || !isOnline) return showToast("Sistema offline.");
             const id = document.getElementById('db-id')?.value;
-            if(!id) return showToast("Nenhum cliente selecionado!");
-            STATE.clients = STATE.clients.filter(c => c.id !== id);
-            try { localStorage.setItem('pegasus_clients', JSON.stringify(STATE.clients)); } catch(e) {}
+            if(!id) return;
             
-            document.getElementById('db-client-form')?.reset();
-            if (document.getElementById('db-id')) document.getElementById('db-id').value = '';
-            STATE.currentIdx = -1;
-            refreshDB();
-            showToast("Registro Excluído Definitivamente!"); 
+            try {
+                await deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'clients', id));
+                document.getElementById('btn-db-clear').click();
+                showToast("Excluído da Nuvem."); 
+            } catch(err) { showToast("Erro ao excluir."); }
         });
 
+        // Copia a Ficha carregada e leva até a Aba 1 de Mapas e Auto-Calcula o Radix para você!
         document.getElementById('btn-calc-client')?.addEventListener('click', () => {
             const name = document.getElementById('db-name').value;
-            if(!name) return showToast("Selecione um cliente no Banco primeiro.");
+            if(!name) return showToast("Selecione um cliente.");
             
             document.querySelector('[data-target="natal"]')?.click();
-            ['name','date','time','city','lat','lng'].forEach(k => {
+            ['name','date','time','tz','city','lat','lng'].forEach(k => {
                 const natEl = document.getElementById(`natal-${k}`);
                 const dbEl = document.getElementById(`db-${k}`);
-                if(natEl && dbEl) natEl.value = dbEl.value;
+                if(natEl && dbEl && dbEl.value) natEl.value = dbEl.value;
             });
-            
-            const cityQuery = document.getElementById('db-city').value.split(',')[0].trim().toLowerCase();
-            const atlasHit = CITIES_DB.find(c => c.name.toLowerCase() === cityQuery);
-            if (atlasHit && document.getElementById('natal-tz')) {
-                document.getElementById('natal-tz').value = atlasHit.tz;
-            }
-            
             document.getElementById('natal-form')?.dispatchEvent(new Event('submit'));
-            
-            const sidebar = document.getElementById('sidebar');
-            if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.add('-translate-x-full');
-                document.getElementById('sidebar-overlay')?.classList.add('hidden');
-            }
+            if(window.innerWidth < 768) toggleMobileMenu();
         });
 
-        // Configurações
-        document.getElementById('btn-save-settings')?.addEventListener('click', () => {
+        // Configurações e Inicialização UI
+        document.getElementById('btn-save-settings')?.addEventListener('click', async () => {
+            if(!userId || !isOnline) return showToast("Offline.");
             STATE.settings.houses = document.getElementById('cfg-houses').value;
-            STATE.settings.pluto = document.getElementById('cfg-pluto').value;
             STATE.settings.orbits.con = parseFloat(document.getElementById('cfg-orb-con').value) || 8;
             STATE.settings.orbits.opp = parseFloat(document.getElementById('cfg-orb-opp').value) || 8;
             STATE.settings.orbits.tri = parseFloat(document.getElementById('cfg-orb-tri').value) || 7;
             STATE.settings.orbits.sqr = parseFloat(document.getElementById('cfg-orb-sqr').value) || 7;
-            try { localStorage.setItem('pegasus_settings', JSON.stringify(STATE.settings)); } catch(e) {}
-            showToast("Memória de Configurações Atualizada Localmente.");
+            
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'settings', 'config'), STATE.settings);
+                showToast("Configurações salvas na nuvem.");
+            } catch(e) { showToast("Erro ao salvar."); }
         });
 
-        function initConfig() {
+        function initConfigUI() {
             if (document.getElementById('cfg-houses')) document.getElementById('cfg-houses').value = STATE.settings.houses || 'placidus';
-            if (document.getElementById('cfg-pluto')) document.getElementById('cfg-pluto').value = STATE.settings.pluto || '♇';
             if (document.getElementById('cfg-orb-con')) document.getElementById('cfg-orb-con').value = STATE.settings.orbits?.con || 8;
             if (document.getElementById('cfg-orb-opp')) document.getElementById('cfg-orb-opp').value = STATE.settings.orbits?.opp || 8;
             if (document.getElementById('cfg-orb-tri')) document.getElementById('cfg-orb-tri').value = STATE.settings.orbits?.tri || 7;
             if (document.getElementById('cfg-orb-sqr')) document.getElementById('cfg-orb-sqr').value = STATE.settings.orbits?.sqr || 7;
-            
-            const grid = document.getElementById('cfg-dignities-grid');
-            if (grid) {
-                grid.innerHTML = PLANETS_BASE.map(p => `
-                    <div class="bg-black/40 p-3 md:p-4 border border-white/5 rounded-lg shadow-inner flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                        <span class="font-bold text-sm md:text-base flex items-center gap-2" style="color:${p.color}"><span class="text-lg md:text-xl">${p.sym}</span> <span class="hidden sm:inline">${p.name}</span></span>
-                        <select class="w-full sm:w-auto bg-surface p-2 rounded border border-white/10 outline-none text-white text-[10px] md:text-xs font-bold uppercase tracking-wider cursor-pointer"><option>Leão ♌</option><option>Câncer ♋</option><option>Gêmeos ♊</option></select>
-                    </div>
-                `).join('');
-            }
         }
 
-        // STARTUP
+        // =====================================
+        // STARTUP MAIN (Ao terminar de desenhar o Body da tela)
+        // =====================================
         document.addEventListener('DOMContentLoaded', () => {
-            refreshDB();
-            initConfig();
-            lucide.createIcons();
-            if(STATE.clients.length > 0) {
-                const counter = document.getElementById('db-counter');
-                if (counter) counter.textContent = `Novo / ${STATE.clients.length}`;
-            }
+            initConfigUI(); // Arruma os inputs das abas de config
+            lucide.createIcons(); // Instancia Imagens vetorizadas nos botões
+            
+            // Popula campos com data de hoje pra facilitar Testes de Trânsitos (Previsões e Revolução)
+            const today = new Date().toISOString().split('T')[0];
+            if(document.getElementById('forecast-date')) document.getElementById('forecast-date').value = today;
+            if(document.getElementById('hit-startdate')) document.getElementById('hit-startdate').value = today;
+            if(document.getElementById('return-start-date')) document.getElementById('return-start-date').value = today;
+
+            // Ativa o gatilho Firebase no Loader/Overlay
+            setTimeout(() => { initAuth(); }, 500);
+            
+            // Failsafe overlay unlock (em caso de erro de conexão silencioso ou firebase indisponível para o preview local). Ele some o Loader de qualquer maneira pra não prender a interface.
+            setTimeout(() => {
+                const overlay = document.getElementById('auth-overlay');
+                if(overlay && overlay.style.display !== 'none') {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.style.display = 'none', 500);
+                }
+            }, 6000);
         });
     </script>
 </body>
